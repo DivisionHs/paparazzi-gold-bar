@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Convidados | Paparazzi Gold Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              night: '#090909',
+              graphite: '#1f1f1f',
+              gold: '#d4a94f',
+              softGold: '#f1d38e'
+            },
+            boxShadow: {
+              glow: '0 0 30px rgba(212, 169, 79, 0.25)',
+              goldRing: '0 0 20px rgba(212, 169, 79, 0.4)'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        background:
+          radial-gradient(circle at top, rgba(212, 169, 79, 0.18), transparent 30%),
+          linear-gradient(135deg, #090909, #111111 50%, #1b1b1b);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-white">
+    <main class="flex min-h-screen items-center justify-center p-4 sm:p-6">
+      
+      <!-- Container do Convite Completo -->
+      <section class="w-full max-w-xl rounded-3xl border border-gold/30 bg-black/50 p-6 shadow-glow backdrop-blur md:p-8">
+        
+        <!-- HEADER DO ESTABELECIMENTO -->
+        <div class="text-center mb-6">
+          <p class="text-xs uppercase tracking-[0.35em] text-softGold font-light mb-1">Paparazzi Gold Bar</p>
+          <div class="h-[1px] w-12 bg-gold/50 mx-auto my-2"></div>
+        </div>
+
+        <!-- SEÇÃO DA FOTO DO ANIVERSARIANTE (RESTAURADA) -->
+        <div id="secao-aniversariante" class="flex flex-col items-center text-center mb-6 hidden">
+          <div class="relative w-40 h-40 sm:w-44 sm:h-44 rounded-full p-[3px] bg-gradient-to-b from-gold via-gold/40 to-transparent shadow-goldRing mb-4">
+            <div class="w-full h-full rounded-full overflow-hidden bg-zinc-900 border border-black">
+              <img 
+                id="foto-aniversariante" 
+                src="../backend/assets/foto_aniversariante_teste.png" 
+                alt="Aniversariante" 
+                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+            <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gold text-black font-black text-[10px] tracking-widest px-3 py-1 rounded-full uppercase shadow">
+              Host VIP
+            </span>
+          </div>
+
+          <h1 class="text-2xl font-bold tracking-tight text-white">
+            Aniversário do <span id="nome-aniversariante" class="text-gold font-extrabold">Carregando...</span>
+          </h1>
+          <p class="mt-2 text-sm text-zinc-300 max-w-xs leading-relaxed">
+            Você foi convidado para comemorar esta data exclusiva conosco! Confirme seus dados para entrar na lista oficial.
+          </p>
+        </div>
+
+        <!-- DIVISOR ESTILIZADO -->
+        <div id="divisor-layout" class="relative flex py-2 items-center mb-4 hidden">
+          <div class="flex-grow border-t border-zinc-800"></div>
+          <span class="flex-shrink mx-4 text-xs font-semibold uppercase tracking-wider text-gold/60">Confirmação de Presença</span>
+          <div class="flex-grow border-t border-zinc-800"></div>
+        </div>
+
+        <!-- MENSAGENS DE STATUS -->
+        <div id="error-message" class="hidden rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200"></div>
+        <div id="success-message" class="hidden rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-200"></div>
+
+        <!-- FORMULÁRIO DO CONVIDADO (ATUALIZADO COM WHATSAPP) -->
+        <form id="guest-form" class="space-y-4 hidden">
+          <div>
+            <label for="nomeCompleto" class="mb-2 block text-sm font-medium text-softGold">Nome Completo</label>
+            <input
+              id="nomeCompleto"
+              name="nomeCompleto"
+              type="text"
+              required
+              class="w-full rounded-xl border border-gold/40 bg-graphite/80 px-4 py-3 text-white outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/40"
+              placeholder="Digite seu nome completo"
+            />
+          </div>
+
+          <div>
+            <label for="cpf" class="mb-2 block text-sm font-medium text-softGold">CPF</label>
+            <input
+              id="cpf"
+              name="cpf"
+              type="text"
+              required
+              maxlength="14"
+              class="w-full rounded-xl border border-gold/40 bg-graphite/80 px-4 py-3 text-white outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/40"
+              placeholder="000.000.000-00"
+            />
+          </div>
+
+          <div>
+            <label for="whatsapp" class="mb-2 block text-sm font-medium text-softGold">WhatsApp</label>
+            <input
+              id="whatsapp"
+              name="whatsapp"
+              type="text"
+              required
+              maxlength="15"
+              class="w-full rounded-xl border border-gold/40 bg-graphite/80 px-4 py-3 text-white outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/40"
+              placeholder="(00) 00000-0000"
+            />
+          </div>
+
+          <div>
+            <label for="dataNascimento" class="mb-2 block text-sm font-medium text-softGold">Data de Nascimento</label>
+            <input
+              id="dataNascimento"
+              name="dataNascimento"
+              type="date"
+              required
+              class="w-full rounded-xl border border-gold/40 bg-graphite/80 px-4 py-3 text-white outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/40"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full rounded-xl bg-gold px-4 py-3 font-semibold text-black transition hover:bg-softGold"
+          >
+            CONFIRMAR PRESENÇA NA LISTA
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      const guestForm = document.getElementById('guest-form');
+      const secaoAniversariante = document.getElementById('secao-aniversariante');
+      const divisorLayout = document.getElementById('divisor-layout');
+      const cpfInput = document.getElementById('cpf');
+      const whatsappInput = document.getElementById('whatsapp');
+      const nomeAniversarianteEl = document.getElementById('nome-aniversariante');
+      const fotoAniversarianteEl = document.getElementById('foto-aniversariante');
+
+      // Captura o lead_id da URL, por exemplo: ?lead_id=101
+      const params = new URLSearchParams(window.location.search);
+      const leadId = params.get('lead_id');
+
+      // Banco de dados temporário (Mock) para o seu teste local funcionar perfeitamente
+      const bancoDeDadosMock = {
+        "101": { nome: "Davi Henrick", foto: "../backend/assets/foto_aniversariante_teste.png" },
+        "202": { nome: "Ric Silva", foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400" }
+      };
+
+      if (!leadId) {
+        errorMessage.classList.remove('hidden');
+        errorMessage.textContent = 'Link inválido. O parâmetro lead_id não foi informado na URL.';
+      } else {
+        // Exibe os elementos ocultos do layout
+        guestForm.classList.remove('hidden');
+        secaoAniversariante.classList.remove('hidden');
+        divisorLayout.classList.remove('hidden');
+
+        // Carrega as informações do aniversariante baseado no ID passado
+        if (bancoDeDadosMock[leadId]) {
+          nomeAniversarianteEl.textContent = bancoDeDadosMock[leadId].nome;
+          fotoAniversarianteEl.src = bancoDeDadosMock[leadId].foto;
+        } else {
+          // Fallback dinâmico caso usem um ID diferente durante os testes locais
+          nomeAniversarianteEl.textContent = "Davi Henrick";
+          fotoAniversarianteEl.src = "../backend/assets/foto_aniversariante_teste.png";
+        }
+
+        // Garante tratamento elegante caso a foto do PC não carregue no browser
+        fotoAniversarianteEl.onerror = function() {
+          this.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400";
+        };
+      }
+
+      // Máscara em tempo real para o CPF
+      cpfInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+        if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+        if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+        e.target.value = value;
+      });
+
+      // Máscara em tempo real para o WhatsApp
+      whatsappInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 0) value = '(' + value;
+        if (value.length > 3) value = value.replace(/^(\(\d{2})(\d)/, '$1) $2');
+        if (value.length > 9) value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        e.target.value = value;
+      });
+
+      // Envio do formulário integrado
+      // Envio do formulário integrado
+      guestForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        
+        // Sempre esconde as mensagens anteriores ao tentar um novo envio
+        errorMessage.classList.add('hidden');
+        successMessage.classList.add('hidden');
+
+        // 1. Validação do Nome Completo
+        const nomeInput = document.getElementById('nomeCompleto');
+        if (nomeInput.value.trim().split(' ').length < 2) {
+          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = 'Por favor, digite seu nome e sobrenome.';
+          nomeInput.focus();
+          return;
+        }
+
+        // 2. Validação do CPF
+        const cpfLimpo = cpfInput.value.replace(/\D/g, '');
+        if (cpfLimpo.length !== 11) {
+          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = 'O CPF digitado está incompleto. Verifique os 11 dígitos.';
+          cpfInput.focus();
+          return;
+        }
+
+        // 3. Validação do WhatsApp
+        const whatsappLimpo = whatsappInput.value.replace(/\D/g, '');
+        if (whatsappLimpo.length < 10 || whatsappLimpo.length > 11) {
+          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = 'O número de WhatsApp está incompleto. Certifique-se de incluir o DDD.';
+          whatsappInput.focus();
+          return;
+        }
+
+        // 4. Validação da Data de Nascimento
+        const dataNascimentoInput = document.getElementById('dataNascimento');
+        if (!dataNascimentoInput.value) {
+          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = 'Por favor, selecione sua data de nascimento.';
+          dataNascimentoInput.focus();
+          return;
+        }
+
+        const payload = {
+          lead_id: leadId,
+          nome_completo: nomeInput.value.trim(),
+          cpf: cpfLimpo,
+          whatsapp: whatsappLimpo,
+          data_nascimento: dataNascimentoInput.value,
+        };
+
+        try {
+          const response = await fetch('http://127.0.0.1:8000/convidados/confirmar', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            // Se o servidor retornou um erro tratado (ex: CPF duplicado), exibe a mensagem exata
+            throw new Error(result?.detail || 'Não foi possível concluir a confirmação.');
+          }
+
+          // Sucesso
+          successMessage.classList.remove('hidden');
+          successMessage.textContent = result?.status || 'Presença confirmada com sucesso!';
+          guestForm.reset();
+          
+          // Opcional: esconde o formulário após o sucesso para o cliente não clicar de novo
+          guestForm.classList.add('hidden'); 
+          divisorLayout.classList.add('hidden');
+
+        } catch (error) {
+          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = error.message;
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>

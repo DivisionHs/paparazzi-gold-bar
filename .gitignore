@@ -1,0 +1,16 @@
+.dart_tool/
+.packages
+.env
+__pycache__/
+.venv/
+
+# Build gerado do Flutter (regenerado via `flutter build web`, não deve ser versionado)
+frontend/build/
+frontend/.dart_tool/
+frontend/.pub-cache/
+
+# Ambientes e caches diversos
+*.pyc
+.idea/
+.vscode/
+desktop.ini

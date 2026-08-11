@@ -1,0 +1,30 @@
+# Blueprint do Render para o backend FastAPI (Paparazzi Gold Bar).
+# Como usar: no dashboard do Render, "New" > "Blueprint" > selecione este repositório.
+# As variáveis marcadas com "sync: false" precisam ser preenchidas manualmente
+# no dashboard (Environment) — nunca ficam versionadas neste arquivo.
+services:
+  - type: web
+    name: paparazzi-api
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.13
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: KOMMO_SUBDOMAIN
+        sync: false
+      - key: KOMMO_LONG_LIVED_TOKEN
+        sync: false
+      - key: KOMMO_TARGET_TAG
+        value: aniversario
+      - key: KOMMO_TARGET_STATUS_ID
+        value: "109983139"
+      - key: KOMMO_WEBHOOK_TEST_MODE
+        value: "false"

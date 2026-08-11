@@ -1,0 +1,4156 @@
+{
+    "0": {
+        "block_uuid": "26663914-aebb-47c6-9f6b-149d56b5f1d5",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "✨ *Seja bem-vindo(a) à Paparazzi Gold Bar!* 🍻🔥\n\n🥂 _O gastrobar mais famoso de São Paulo._\n_\n🏆 Copa do Mundo AO VIVO nos telões\n🎶 Música ao vivo + DJs\n🍖 Buffets grátis todos\n os dias\n🎂 Aniversários e confraternizações\n\n📲 Salve nosso contato para receber promoções, programação e novidades.\n\n👇 *Escolha uma das opções abaixo:*\n\n📅 *Programação*\nShows, buffets, Copa do Mundo, Festa Junina e eventos da semana.\n\n🎂 *Aniversário*\nBenefícios exclusivos, brindes e reserva gratuita para sua comemoração.\n\nℹ️ *Informações Gerais*\nCardápio, endereço, valores, estacionamento, reservas e dúvidas.\n\n✨ *ISSO AQUI É PAPARAZZI!* ✨",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "👉 PROGRAMAÇÃO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 ANIVERSÁRIO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 INFORMAÇÕES GERAL"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": true,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 PROGRAMAÇÃO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 48
+                                }
+                            }
+                        ],
+                        "synonyms": [
+                            "Programação"
+                        ]
+                    },
+                    {
+                        "value": "👉 ANIVERSÁRIO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 49
+                                }
+                            }
+                        ],
+                        "synonyms": [
+                            "Aniversário"
+                        ]
+                    },
+                    {
+                        "value": "👉 INFORMAÇÕES GERAL",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 47
+                                }
+                            }
+                        ],
+                        "synonyms": [
+                            "Informações Geral"
+                        ]
+                    },
+                    {
+                        "type": "else",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 34
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 62,
+                "type": "question"
+            }
+        }
+    },
+    "5": {
+        "block_uuid": "e2673d67-e7a3-4afd-80ba-4ff7aafa7059",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉🥳 *Uhuullll Parabéns!*\n\nVocê acaba de ganhar entrada *vip* e desbloqueou *benefícios exclusivos* para comemorar seu aniversário na Paparazzi Gold Bar.\n\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🥂 Garrafa de bebida \n📷 Flyer convite personalizado para enviar aos amigos\n🍖 Buffets grátis para você e seus convidados em dias selecionados\n🎶 Shows ao vivo + DJs\n\n🔥 Mais de 350 mil pessoas já viveram a experiência Paparazzi ao longo dos nossos 4 anos de história.\n\nAgora escolha o dia da sua comemoração 👇",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "👉 SEXTA FEIRA"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 SÁBADO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 DOMINGO"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 SEXTA FEIRA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 90
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 SÁBADO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 95
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 DOMINGO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 97
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 104,
+                "type": "question"
+            }
+        }
+    },
+    "8": {
+        "block_uuid": "6c6f562d-57e7-43f7-abd0-1b54a90fbb97",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "📌 *COMO FUNCIONA A RESERVA DE MESA*\n\n✨ Não cobramos nada pela reserva.\n\n🏆 Durante a Copa do Mundo e eventos especiais, as mesas costumam esgotar rapidamente, por isso recomendamos reservar com antecedência.\n\n🎁 Reservas para grupos acima de 5 pessoas ganham um brinde especial da casa.\n\n👥 Grupos com menos de 5 pessoas não precisam reservar. A entrada é por ordem de chegada, mas pode vir tranquilo... a casa é grande e sempre damos um jeito de acomodar todo mundo 😄\n\n🎟️ Você paga somente a entrada da casa:\n\n🚹 R$30 homens\n🚺 R$20 mulheres\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos: R$10\n\n👇 Clique em uma das opções abaixo e faça sua reserva.\n\n🔥 ISSO AQUI É PAPARAZZI! 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "RESERVAR SEXTA",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR SÁBADO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR DOMINGO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "COPA DO MUNDO",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "RESERVAR SEXTA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 44
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR SÁBADO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 45
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR DOMINGO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 46
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "COPA DO MUNDO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 75
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 115,
+                "type": "question"
+            }
+        }
+    },
+    "11": {
+        "block_uuid": "8dd4530e-290c-43a1-8a1a-e9610ced542c",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "📅🔥 *PROGRAMAÇÃO PAPARAZZI* 🔥📅\n\n🍖 *SEXTA FEIRA DAS 18H AS 03 DA MANHÃ*\n🍖 Comida de boteco + churrasco grátis das 18h às 22h\n🎶 Kinha Arruaça • 🎧 DJ Pereira\n\n🍲 *SÁBADO DAS 12H AS 03 DA MANHÃ*\n🍲 Buffet de feijoada grátis das 12h às 16h\n🎶 Edinho • Renato Cardoso • Pagode do Dieguinho\n🎧 DJ K5 • DJ Pereira\n\n🥩 *DOMINGO DAS 12H AS 00*\n🥩 Buffet de churrasco grátis das 12h às 16h\n🎶 Edinho • Vê Se Me Escuta\n🎧 DJ K5\n\n⚽ Jogos da copa AO VIVO nos telões\n🎶 Pagode ao vivo\n🎧 DJs durante toda a tarde\n\n🎟️ *Entrada da casa:*\n🚹 R$30 homens • 🚺 R$20 mulheres\n👶 Até 5 anos não pagam • 🧒 Acima de 5 anos: R$10\n\n📍 Av. Sport Club Corinthians Paulista, 476 – Osasco/SP\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "RESERVAR ANIVERSÁRIO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "RESERVAR MESA"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "RESERVAR COPA"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "INFORMAÇÕES GERAIS"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "RESERVAR ANIVERSÁRIO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 5
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR MESA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 42
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR COPA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 75
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "INFORMAÇÕES GERAIS",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 47
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 84,
+                "type": "question"
+            }
+        }
+    },
+    "15": {
+        "block_uuid": "ef56f457-c667-4dbc-86de-85a6e8584fcb",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Perfeito 👍\nVou te direcionar para falar com a Paty!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "16": {
+        "block_uuid": "f1c0d7f5-6975-407b-b8e7-7b8c3c530d93",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 102483403,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 15
+                }
+            }
+        ]
+    },
+    "19": {
+        "block_uuid": "e78e82b6-f649-42df-986c-7360e865054d",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 86
+                            }
+                        },
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 20
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "20": {
+        "block_uuid": "385c4c6c-e57e-4f79-b9fb-678e0d515614",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Perfeito! 🎉\n\n🎉 Agora é só escolher o dia e garantir sua sua reserva de aniversário no Gastrobar mais famoso de São Paulo ✨\n\n\nClique abaixo e veja os benefícios 👇",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "SEXTA FEIRA",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "SÁBADO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "DOMINGO",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "SEXTA FEIRA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 37
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "SÁBADO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 38
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "DOMINGO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 39
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "21": {
+        "block_uuid": "19b1543a-e80d-40f8-8b55-cd03257749b7",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Comemore seu aniversário no *GASTROBAR* mais famoso de *São Paulo*\n\nReúna seus amigos e familiares e venha viver uma experiência incrível no Paparazzi Gold Bar. 🥂\n\n🔥 *PROGRAMAÇÃO DE SEXTA-FEIRA*\n\n🍖 Buffet GRATUITO de churrasco + comida de boteco\n⏰ Das 18h às 22h\n\n🎤 Música ao vivo + DJs durante a noite\n\n🕺 A casa abre 18h\n🎉 E funciona até o último cliente\n\n✨ *Como funciona?*\n\nChegando dentro do horário do buffet (18h às 22h) você e seus convidados podem se servir à vontade quantas vezes quiserem no nosso buffet de churrasco e comida de boteco.\n\nE o melhor: vocês não pagam nada pelo buffet.\n\nAlém disso, vocês ainda vão curtir música ao vivo, DJs e um ambiente incrível para comemorar seu aniversário com seus amigos e familiares.\n\n🎉 *Benefícios para aniversariantes:*\n\n👥 Com 10 convidados\n🥂 1 Chandon\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 Com 20 convidados\n🍸 1 Gin\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 Com 30 convidados\n🥃 1 Whisky\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n🎟 Cobramos somente a entrada\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n🔥 *Isso aqui é Paparazzi*\n\n🎉 Bora fazer uma festa incrível?",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "90582eff-3bdd-4fed-9627-a6ba33b4b92b",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 40
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 83,
+                "type": "question"
+            }
+        }
+    },
+    "22": {
+        "block_uuid": "b44c81bf-2c1a-4105-ae4c-0807f9843e8f",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Comemore seu aniversário no *GASTROBAR* mais famoso de *São Paulo*\n\nReúna seus amigos e familiares e venha viver uma experiência incrível no Paparazzi Gold Bar. 🥂\n\n🥘 *SÁBADO FEIJOADA*\n\n🍲 Buffet GRATUITO de feijoada completa\n⏰ Das 12h às 16h\n\n🎤  shows ao vivo + DJs durante o evento\n\n🕺 A casa abre 12h\n🎉 E funciona até às 05h da manhã\n\n✨ *Como funciona?*\n\nChegando dentro do horário do buffet (12h às 16h) você e seus convidados podem se servir à vontade quantas vezes quiserem no nosso buffet completo de feijoada.\n\n*E o melhor:* vocês não pagam nada pelo buffet.\n\nAlém disso, vocês ainda vão curtir música ao vivo, DJs e um ambiente incrível para comemorar seu aniversário com seus amigos e familiares.\n\n\n\n⏰ Tolerância de até 30 minutos de atraso.\nApós esse período, a mesa poderá ser liberada conforme disponibilidade da casa.\n\n⸻\n\n🎉 *Benefícios para aniversariantes*\n\n👥 Com 10 convidados\n🥂 1 Chandon\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 Com 20 convidados\n🍸 1 Gin\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 Com 30 convidados\n🥃 1 Whisky\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n⸻\n\n🎟 Cobramos somente a entrada\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n⭐️ *Isso aqui é Paparazzi* ⭐️\n\nE aí bora fazer uma festa incrível?",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "SÁBADO A NOITE",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "42561c01-db68-4e9a-ba4e-4f975646d1df",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "SÁBADO A NOITE",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 23
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 40
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 82,
+                "type": "question"
+            }
+        }
+    },
+    "23": {
+        "block_uuid": "36667df7-b0b5-40ef-94f4-14d5da4662fc",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Comemore seu aniversário no *GASTROBAR* mais famoso de *São Paulo*\n\nReúna seus amigos e familiares e venha viver uma experiência incrível no Paparazzi Gold Bar. 🥂\n\n🌙 *SÁBADO À NOITE*\n\n🎤 Shows ao vivo + DJs durante a noite\n\n🕺 A casa abre 12h\n🎉 E funciona até às 05h da manhã\n\n✨ *Como funciona?*\n\nNo sábado à noite não temos buffet, mas contamos com diversas opções deliciosas no nosso cardápio, além de drinks incríveis e um ambiente perfeito para você comemorar seu aniversário com seus amigos e familiares.\n\nAlém disso, vocês ainda vão curtir shows ao vivo, DJs e uma energia incrível para transformar sua comemoração em uma noite inesquecível.\n\n⸻\n\n🎉 *Benefícios para aniversariantes*\n\n👥 Com 10 convidados\n🥂 1 Chandon\n🎂 Bolo da Sodiê \n🎈 Balão personalizado\n🍾 Camarote para você e seus convidados\n\n👥 Com 20 convidados\n🍸 1 Gin\n🎂 Bolo da Sodiê \n🎈 Balão personalizado\n🍾 Camarote para você e seus convidados\n\n👥 Com 30 convidados\n🥃 1 Whisky\n🎂 Bolo da Sodiê \n🎈 Balão personalizado\n🍾 Camarote para você e seus convidados\n\n⸻\n\n🎟 Cobramos somente a entrada\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n⭐️ *Isso aqui é Paparazzi ⭐️\n\n🎉 E aí, bora fazer uma festa incrível?",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "2d619671-1072-44e7-abae-7fa8f77611f0",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 40
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 80,
+                "type": "question"
+            }
+        }
+    },
+    "24": {
+        "block_uuid": "b5615c73-68b3-4371-975a-426e1632808f",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Comemore seu aniversário no *GASTROBAR* mais famoso de São Paulo\n\nReúna seus amigos e familiares e venha viver um domingo inesquecível no Paparazzi Gold Bar. 🥂\n\n🔥 *DOMINGO CHURRASCO*\n\n🍖 Buffet GRATUITO de churrasco completo\n⏰ Das 12h às 16h\n\n🥗 Buffet completo com churrasco, maionese, farofa e muito mais\n\n🎤 Shows ao vivo + DJs durante o evento\n\n🕺 A casa abre 12h\n🎉 E funciona até o último cliente\n\n✨ *Como funciona?*\n\nChegando dentro do horário do buffet (12h às 16h) você e seus convidados podem se servir à vontade quantas vezes quiserem no nosso buffet completo de churrasco.\n\nTudo isso sem pagar nada pelo buffet.\n\nAlém da comida incrível, você ainda aproveita shows ao vivo, DJs e um ambiente animado, perfeito para comemorar com seus amigos e familiares.\n\n\n⏰ Tolerância de até 30 minutos de atraso.\nApós esse período, a mesa poderá ser liberada conforme disponibilidade da casa.\n\n⸻\n\n🎉 *Benefícios para aniversariantes*\n\n👥 Com 10 convidados\n🥂 1 Chandon\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 Com 20 convidados\n🍸 1 Gin\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 Com 30 convidados\n🥃 1 Whisky\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n⸻\n\n🎟 Cobramos somente a entrada\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n⭐️ *Isso aqui é Paparazzi* ⭐️\n\n🔥 Agora me conta… bora fazer uma festa incrível? 🥂",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "b3b2af29-867d-40dd-8053-ffcb78adb8b7",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 40
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 78,
+                "type": "question"
+            }
+        }
+    },
+    "26": {
+        "block_uuid": "a816bb72-fd48-4fc6-8202-0d0b3c9c141e",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Reserva confirmada com sucesso!\n\nJá estamos organizando tudo para que seu aniversário seja inesquecível no Paparazzi Gold Bar 🥂✨\n\nPara finalizar seu convite personalizado, envie por favor:\n\n📷 Uma foto de boa qualidade\n📛 O nome que deseja colocar no convite\n\nAssim que recebermos, montaremos o flyer para você enviar aos seus convidados. Vai ser uma festa incrível! 🎉🔥\n\nQualquer dúvida, estamos à disposição.\n\n✨ Isso aqui é Paparazzi! ✨",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "27": {
+        "block_uuid": "b117c25f-4569-4271-be88-89e9739f6cca",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "ℹ️ *INFORMAÇÕES GERAIS – PAPARAZZI GOLD BAR*\n\n📍 *ENDEREÇO*\nAv. Sport Club Corinthians Paulista, 476 – Osasco/SP\n\n🍽️ *CARDÁPIO:*\nhttps://gqr.be/3Ignh\n\n📺 Todos os jogos da Copa serão transmitidos AO VIVO nos telões.\n\n📅 *PROGRAMAÇÃO*\n\n🍖 *SEXTA FEIRA*\n🍖 Comida de boteco + churrasco grátis das 18h às 22h\n🎶 Kinha Arruaça • 🎧 DJ Pereira\n\n🍲 *SÁBADO*\n🍲 Feijoada grátis das 12h às 16h\n🎶 Edinho • Renato Cardoso • Pagode do Dg\n🎧 DJ K5 • DJ Pereira\n\n🥩 *DOMINGO*\n🥩 Buffet de churrasco grátis das 12h às 16h\n🎶 Edinho • Vê Se Me Escuta\n🎧 DJ K5\n\n🎟️ *Entrada:*\n🚹 R$30 homens • 🚺 R$20 mulheres\n👶 Até 5 anos não pagam • 🧒 Acima de 5 anos: R$10\n\n🪑 *Reserva de mesa:*\n✔ Recomendamos para grupos de 5 pessoas ou mais.\n👥 Menos de 5 pessoas é por ordem de chegada. Nossa casa é ampla e comporta todos os clientes.\n✨ Não cobramos nada pela reserva.\n\n💳 *Pagamento:* Pix, débito, crédito e dinheiro.\n\n🚗 *Estacionamento:* R$30\n\n💨 *Narguilé:* R$40 (disponível após o buffet)\n\n🎂 Aniversários • 🥂 Confraternizações • ⚽ Futebol nos telões • 🏢 Eventos privados\n\n👇 Se precisar de mais alguma informação, é só chamar!\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "ANIVERSÁRIO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "COPA DO MUNDO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR MESA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "ANIVERSÁRIO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 49
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "COPA DO MUNDO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 75
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR MESA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 42
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "type": "else",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 92
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 91,
+                "type": "question"
+            }
+        }
+    },
+    "28": {
+        "block_uuid": "111d948a-656e-4c1d-9da8-38bcbe86ace3",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🔥 *PROGRAMAÇÃO DE SÁBADO*\n\n🍲 Buffet GRATUITO de feijoada completa\n⏰ Das 12h às 16h\n\n🎤 Música ao vivo + DJs durante o evento\n\n A casa abre 12H meio dia \n🎉 E funciona até o último cliente geralmente até as 5 da manhã\n\n\n✨ *Como funciona?*\n\nChegando dentro do horário do buffet (12h às 16h) você pode se servir à vontade quantas vezes quiser no nosso buffet de feijoada completa.\n\nE o melhor: você não paga nada pelo buffet.\n\nAlém disso, você ainda vai curtir música ao vivo, DJs e um ambiente incrível para aproveitar o sábado com seus amigos e família.\n\n🎟 Cobramos somente a entrada:\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n👇 *Clique no botão abaixo para confirmar sua reserva.* 🥂",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "SÁBADO A NOITE",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "63c6a8b3-bc65-47ac-813a-31ee943656e3",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "SÁBADO A NOITE",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 29
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 32
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "29": {
+        "block_uuid": "2fe611b5-689e-4956-b7e7-fcee4a781448",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🔥 *PROGRAMAÇÃO DE SÁBADO À NOITE*\n\n🎤 Música ao vivo + DJs a noite toda\n\n🍸 Ambiente animado, pista cheia e muita energia para curtir com os amigos\n\n🕺 A casa abre 12H meio dia \n🎉 E funciona até o último cliente geralmente até as 5 da manhã\n\n✨ Como funciona?\n\nNo sábado à noite não temos buffet, mas você pode aproveitar toda a programação da casa com música ao vivo, DJs e um ambiente incrível para curtir a noite.\n\n🍾 Reservamos bistrôs para grupos de 5 pessoas ou mais, garantindo mais conforto para você e seus convidados.\n\n🎟 Cobramos somente a entrada:\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n👇 Clique no botão abaixo para confirmar sua reserva. 🥂",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMA RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "ad67948a-3585-4275-afc7-2a88e1cbc1e8",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMA RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 32
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "30": {
+        "block_uuid": "5415ba23-b60e-41b5-a991-aa7023200484",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🔥 *PROGRAMAÇÃO DE DOMINGO*\n\n🍖 Buffet GRATUITO de churrasco\n⏰ Das 12h às 16h\n\n🎤 Música ao vivo + DJs durante o evento\n\n🕺 A casa abre 12H meio dia \n🎉 E funciona até o último cliente\n\n✨ *Como funciona?*\n\nChegando dentro do horário do buffet (12h às 16h) você pode se servir à vontade quantas vezes quiser no nosso buffet de churrasco.\n\nE o melhor: você não paga nada pelo buffet.\n\nAlém disso, você ainda vai curtir música ao vivo, DJs e um ambiente incrível para aproveitar o domingo com seus amigos e família.\n\n🎟 Cobramos somente a entrada:\n\n🚹 R$30,00 Homem\n🚺 R$ 20,00 Mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n👇 Clique no botão abaixo para confirmar sua reserva. 🥂",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "37425989-37ee-4f79-bf2f-8184a59bb535",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 32
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "31": {
+        "block_uuid": "26ca2da6-5a95-47ca-ab41-be3e38e3e573",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🔥 *PROGRAMAÇÃO DE SEXTA-FEIRA*\n\n🍖 Buffet GRATUITO de comida de boteco + churrasco\n⏰ Das 18h às 22h\n\n🎤 Música ao vivo + DJs a noite toda\n\n🕺 A casa abre 18h\n🎉 E funciona até o último cliente\n\n✨ *Como funciona?*\n\nChegando dentro do horário do buffet (18h às 22h) você pode se servir à vontade quantas vezes quiser no nosso buffet de churrasco e comida de boteco.\n\nE o melhor: você não paga nada pelo buffet.\n\nAlém disso, você ainda vai curtir música ao vivo, DJs e um ambiente incrível para aproveitar a noite com seus amigos e família.\n\n🎟 Cobramos somente a entrada:\n\n🚹 R$30 homem\n🚺 R$20 mulher\n\n👶 Crianças até 5 anos não pagam\n🧒 Acima de 5 anos pagam R$10\n\n👇 *Clique no botão abaixo para confirmar sua reserva.* 🥂",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "933a8f86-c83a-4aab-ab93-22cfd1d7cf1d",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 32
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "32": {
+        "block_uuid": "6b4c87b0-6858-4829-aada-310b677d8428",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 102488587,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 33
+                }
+            }
+        ]
+    },
+    "33": {
+        "block_uuid": "6ab2355f-516b-4a16-95ae-5ad7b81cc0b9",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Perfeito! Recebemos todas as suas informações.\n\nNossa equipe já foi avisada e, em breve, entrará em contato para confirmar sua reserva.\n\n⚽ Estamos recebendo um grande número de solicitações por causa da Copa do Mundo, por isso pedimos apenas um pouquinho de paciência.\n\nObrigado pela preferência. Vai ser um prazer receber você e seus convidados! ❤️\n\n🔥 ISSO AQUI É PAPARAZZI!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 138
+                }
+            }
+        ]
+    },
+    "34": {
+        "block_uuid": "901b43a6-8fed-4d73-ae44-9646af71b188",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Não consegui identificar sua opção 😊\nEscolha uma das opções abaixo é só clicar.",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "👉 PROGRAMAÇÃO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 ANIVERSÁRIO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 INFORMAÇÕES GERAL"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 PROGRAMAÇÃO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 48
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 ANIVERSÁRIO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 49
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 INFORMAÇÕES GERAL",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 47
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "36": {
+        "block_uuid": "c5b4e589-dbd6-4281-bcb1-8f9ef7b07865",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Oii! 😍\n\nPercebi que você ainda não escolheu uma opção, então vou deixar nossa programação aqui. Quem sabe a gente te convence? 😍🔥\n\n\n\n🍖 *SEXTA FEIRA DAS 18H AS 03 DA MANHÃ*\n🍖 Comida de boteco + churrasco grátis das 18h às 22h\n🎶 Kinha Arruaça • 🎧 DJ Pereira\n\n🍲 *SÁBADO DAS 12H AS 03 DA MANHÃ*\n🍲 Buffet de feijoada grátis das 12h às 16h\n🎶 Edinho • Renato Cardoso • Pagode do Dieguinho\n🎧 DJ K5 • DJ Pereira\n\n🥩 *DOMINGO DAS 12H AS 00*\n🥩 Buffet de churrasco grátis das 12h às 16h\n🎶 Edinho • Vê Se Me Escuta\n🎧 DJ K5\n\n⚽ Jogos da Copa AO VIVO nos telões\n🎶 Pagode ao vivo\n🎧 DJs durante toda a tarde\n\n🎟️ *Entrada da casa:*\n🚹 R$30 homens • 🚺 R$20 mulheres\n👶 Até 5 anos não pagam • 🧒 Acima de 5 anos: R$10\n\n📍 Av. Sport Club Corinthians Paulista, 476 – Osasco/SP\n👇 Me responde qual dia você tem interesse que eu te passo todas as informações e ajudo a fazer sua reserva.\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "👉 ANIVERSÁRIO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 INFORMAÇÕES GERAL"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "🇧🇷 COPA DO MUNDO"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 ANIVERSÁRIO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 5
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 INFORMAÇÕES GERAL",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 27
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "🇧🇷 COPA DO MUNDO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 65
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 130,
+                "type": "question"
+            }
+        }
+    },
+    "37": {
+        "block_uuid": "8b4eab29-9bbc-4633-8fb3-e2e3ff001aa3",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 100323135,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 21
+                }
+            }
+        ]
+    },
+    "38": {
+        "block_uuid": "37dad837-e36f-45ee-9b44-575b97e559bc",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 100323139,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 22
+                }
+            }
+        ]
+    },
+    "39": {
+        "block_uuid": "7454919d-47e8-40f9-9d49-53659b9db1a2",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 100323723,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 24
+                }
+            }
+        ]
+    },
+    "40": {
+        "block_uuid": "2bcd22d5-0d6d-49eb-b8fc-1646a9001293",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 109630671,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 26
+                }
+            }
+        ]
+    },
+    "42": {
+        "block_uuid": "fd0b16f8-4b16-4118-9d87-6395b6a46278",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🍾 Vai ser um prazer receber você no PAPARAZZI GOLD BAR,\n\n\no Gastrobar mais famoso de São Paulo!\nPara fazer sua reserva de mesa, me informe por favor:\n\n👉 Nome:\n👉 Data da reserva:\n👉 Quantidade de pessoas:\n👉 Horário desejado:\n\n⚠️ *RESPONDA SOMENTE AS INFORMAÇÕES SOLICITADAS ACIMA.*",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 43
+                }
+            }
+        ]
+    },
+    "43": {
+        "block_uuid": "aabf6b7c-9f47-4851-9359-0848c05d0c5d",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 8
+                            }
+                        },
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 114
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "44": {
+        "block_uuid": "223c7fa5-3b41-4355-8183-d8552388538b",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 102483407,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 31
+                }
+            }
+        ]
+    },
+    "45": {
+        "block_uuid": "36918dfa-78a8-4f2b-b466-27199687f89f",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 102483407,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 28
+                }
+            }
+        ]
+    },
+    "46": {
+        "block_uuid": "15aecf25-d60a-42a3-b266-cc7a9ae81ff5",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 102483407,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 30
+                }
+            }
+        ]
+    },
+    "47": {
+        "block_uuid": "c6ae6685-13a1-421c-a90d-ecee4c5f5f3e",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 106404987,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 27
+                }
+            }
+        ]
+    },
+    "48": {
+        "block_uuid": "a18ea161-b72a-4238-9848-92a70d23e6b5",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 105932027,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 11
+                }
+            }
+        ]
+    },
+    "49": {
+        "block_uuid": "66cf4edc-4196-4df5-8037-2c7c8d5d4820",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 109063431,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 5
+                }
+            }
+        ]
+    },
+    "56": {
+        "block_uuid": "298fc345-0aca-45ee-bdaa-93a446a07769",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🏆🇧🇷 UHUUULLL! Sua reserva para a Copa do Mundo está quase garantida!\n\nVai ser um enorme prazer receber você e seus convidados aqui na Paparazzi para torcer pela nossa Seleção Brasileira. 🔥🥂\n\n📺 Jogos AO VIVO nos telões\n🍖 Buffet grátis nos dias de jogos\n🎶 Música ao vivo\n🎧 DJs durante toda a programação\n🍻 Drinks e cerveja gelada\n\nPara finalizarmos sua reserva, me informe por favor:\n\n👤 Nome completo:\n📅 Data da reserva:\n👥 Quantidade aproximada de pessoas:\n⏰ Horário desejado:\n\n⚠️ *RESPONDA SOMENTE ÀS INFORMAÇÕES ACIMA.*\n\n✨ Não cobramos nada pela reserva.\n\n🔥 ISSO AQUI É PAPARAZZI! 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "picture",
+                            "value": "78d001cf-bffc-4795-837d-64b4b4194556",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 58
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 117,
+                "type": "question"
+            }
+        }
+    },
+    "58": {
+        "block_uuid": "dae7ed44-b694-43e4-86c3-db35aba29802",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 107426643,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 59
+                }
+            }
+        ]
+    },
+    "59": {
+        "block_uuid": "d0a009bd-6859-4822-8493-f76dcec4c7c8",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🥳 Perfeito! Recebemos todas as suas informações.\n\nNossa equipe já foi avisada e, em breve, entrará em contato para confirmar sua reserva.\n\n⚽ Estamos recebendo um grande número de solicitações por causa da Copa do Mundo, por isso pedimos apenas um pouquinho de paciência.\n\nObrigado pela preferência. Vai ser um prazer receber você e seus convidados! ❤️\n\n🔥 ISSO AQUI É PAPARAZZI!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 136
+                }
+            }
+        ]
+    },
+    "61": {
+        "block_uuid": "ae34c708-fb29-4dab-b23f-816176cab073",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Oii 😍\n\nPercebi que você ainda não escolheu uma opção.\n\n😮‍💨🔥 Não fique de fora!\n\nReúna sua família e seus amigos e venha viver uma experiência única no gastrobar mais famoso de São Paulo.\n\n🍖 Buffets grátis em dias especiais\n🎶 Música ao vivo\n🎧 DJs\n⚽ Futebol no telão\n🏆 Copa do Mundo AO VIVO\n🥂 Ambiente perfeito para todas as ocasiões\n\n📍 Av. Sport Club Corinthians Paulista, 476 – Osasco/SP\n\n✨ Esperamos você!\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "🇧🇷 COPA DO MUNDO"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 ANIVERSÁRIO"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "🇧🇷 COPA DO MUNDO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 75
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 ANIVERSÁRIO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 49
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 128,
+                "type": "question"
+            }
+        }
+    },
+    "62": {
+        "block_uuid": "e5a119fd-e083-4af5-a4df-d1ddf58a3972",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "source": "timer",
+                                "action": "ended",
+                                "delay": 36060
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 36
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "63": {
+        "block_uuid": "d86b45b3-f1b8-4e85-9e49-91f91f7e0034",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 107438243,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 67
+                }
+            }
+        ]
+    },
+    "65": {
+        "block_uuid": "0682e359-229d-451b-ba95-7534c95c9075",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🏆🇧🇷 UHUUUL! Você acaba de encontrar um dos melhores lugares para assistir aos jogos da Seleção Brasileira! 🔥🥂\n\n📺 Jogos AO VIVO nos telões\n🍖 Buffet grátis nos dias de jogos\n🎶 Música ao vivo\n🎧 DJs durante toda a programação\n🍻 Drinks e cerveja gelada\n👨‍👩‍👧‍👦 Ambiente perfeito para reunir amigos e família\n\n⚽ *COMO FUNCIONA?*\n\nChegando dentro do horário do buffet, você e seus convidados podem aproveitar o buffet gratuito disponível na programação do dia.\n\nAlém disso, vocês vão assistir aos jogos da Seleção Brasileira ao vivo em nossos telões e curtir toda a experiência da Copa do Mundo na Paparazzi.\n\n✨ Não cobramos nada pela reserva.\n\n⚠️ Em dias de jogos da Seleção a procura é muito grande e as mesas são limitadas.\n\n👇 Clique abaixo e garanta sua reserva.\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "RESERVAR AGORA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "RESERVAR AGORA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 56
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 124,
+                "type": "question"
+            }
+        }
+    },
+    "66": {
+        "block_uuid": "a2201cd1-a240-46d6-adea-2b4d2590ef96",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            }
+                        },
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 119
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "67": {
+        "block_uuid": "bb4bbe7a-f5bf-4087-98f1-be0a2d6c401c",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🌽🤠 UHUUUL! Você acaba de encontrar a Festa Junina mais animada de São Paulo! 🎊🔥\n\n*COMO FUNCIONA A RESERVA PARA A FESTA JUNINA?*\n\n✨ Não cobramos nada pela reserva.\n\n🌽 No dia 26 de junho teremos nossa Festa Junina com buffet de comidas típicas grátis das 18h às 22h, música ao vivo e DJs durante toda a noite.\n\n🎶 Shows ao vivo + DJs\n🌽 Buffet de comidas típicas grátis\n📸 Decoração temática\n🍻 Drinks e cerveja gelada\n👨‍👩‍👧‍👦 Ambiente perfeito para reunir amigos e familiares\n\n🪑 As reservas são recomendadas para grupos de 5 pessoas ou mais.\n\n👥 Grupos menores não precisam reservar. A entrada é por ordem de chegada e a casa é ampla, com mesas e bistrôs distribuídos por todo o espaço.\n\n⚠️ *Devido à grande procura, estamos nas ultimas reservas, corre e garanta ja sua reserva \n\n⏰ As reservas possuem tolerância de 30 minutos após o horário informado.\n\n💛 Entrada promocional:\nR$39,99 por pessoa.\n\n👶 Crianças até 5 anos não pagam.\n🧒 Acima de 5 anos: R$10.\n\n👇 Se deseja solicitar sua reserva, clique no botão *CONFIRMAR RESERVA*.\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "name": "IMG_0304.MOV",
+                            "type": "document",
+                            "value": "42489f88-b3ec-4b1a-92e1-af0a7b6c8418",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 70
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 123,
+                "type": "question"
+            }
+        }
+    },
+    "70": {
+        "block_uuid": "bb95baba-c808-4b71-81cf-c07e87971879",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 107426639,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 71
+                }
+            }
+        ]
+    },
+    "71": {
+        "block_uuid": "cf6acb04-75a0-4248-93b8-973a947f8299",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🌽🎊 *Sua reserva para a Festa Junina da Paparazzi foi confirmada com sucesso!*\n\nEstamos muito felizes em receber você para uma noite especial de muita música, diversão e comidas típicas. 🤠🔥\n\n🌽 Buffet de comidas típicas grátis\n⏰ Das 18h às 22h\n\n🎶 Música ao vivo\n\n🎧 DJs durante toda a noite\n\n⏰ Pedimos apenas que chegue no horário combinado.\n\n⚠️ Tolerância de 30 minutos após o horário reservado.\n\nPara finalizarmos sua reserva, me informe por favor:\n\n👤 Nome completo:\n📅 Data da reserva:\n👥 Quantidade de pessoas:\n⏰ Horário aproximado:\n\n⚠️ *RESPONDA SOMENTE ÀS INFORMAÇÕES ACIMA.*\n\nQualquer imprevisto, nos avise por aqui.\n\nNos vemos em breve! 🥂✨\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "74": {
+        "block_uuid": "4e4cc8bf-6d71-4b20-b072-a0db9b8edd43",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🚨🌽 Não fique de fora da Festa Junina da Paparazzi!\n\nSua solicitação ainda não foi finalizada e estamos nas últimas reservas disponíveis para esta sexta-feira.\n\n🤠 Nesta Sexta-Feira\n🌽 Buffet de comidas típicas grátis das 18h às 22h\n🎶 Música ao vivo\n🎧 DJs durante toda a noite\n🍻 Drinks e cerveja gelada\n\n⚠️ As mesas e bistrôs estão sendo reservados rapidamente.\n\n👇 Clique em *CONFIRMAR RESERVA* e garanta seu lugar.\n\n🔥 ISSO AQUI É PAPARAZZI! 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAS RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAS RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 70
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 135,
+                "type": "question"
+            }
+        }
+    },
+    "75": {
+        "block_uuid": "0972503b-fb7c-4e58-adf7-eaafd2e997c7",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 107438239,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 65
+                }
+            }
+        ]
+    },
+    "76": {
+        "block_uuid": "71eb295d-41e5-4db4-b9ed-5e00a03befba",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 77
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "77": {
+        "block_uuid": "60c71138-b2b0-4b1c-850c-1d62c7182536",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🇧🇷🏆 Sua mesa para a Copa do Mundo ainda não está garantida!\n\nPercebemos que você iniciou sua solicitação de reserva, mas ela ainda não foi concluída.\n\n⚽ Venha torcer pela Seleção Brasileira no gastrobar mais famoso de São Paulo.\n\n📺 Jogos AO VIVO nos telões\n\n🍖 Buffet grátis nos dias de jogos\n\n🎶 Música ao vivo\n\n🍻 Ambiente perfeito para reunir amigos e família\n\n⚠️ As mesas são limitadas e a procura é muito grande nos dias de jogos do Brasil.\n\n👇 Clique em *CONFIRMAR RESERVA* para finalizar sua solicitação.\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 58
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "78": {
+        "block_uuid": "7941572a-4017-4125-81c8-7bed41731666",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 79
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "79": {
+        "block_uuid": "2df73a82-8c1b-437e-8fe0-224b24192ee1",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎂🥂 Seu aniversário na Paparazzi está quase confirmado!\n\nPercebemos que você iniciou sua solicitação, mas ainda não concluiu a reserva.\n\n✨ Não cobramos nada pela reserva.\n\n🎁 Benefícios exclusivos para aniversariantes\n\n🎂 Bolo da Sodiê\n\n🎈 Balão personalizado\n\n📸 Flyer convite personalizado\n\n🥂 Brindes para você e seus convidados\n\n⚠️ As datas mais procuradas costumam preencher rapidamente.\n\n👇 Clique em *CONFIRMAR RESERVA* para continuar sua solicitação.\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 40
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "80": {
+        "block_uuid": "bffd410a-d3c0-4b69-8a9a-482bfe2c2102",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 79
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "81": {
+        "block_uuid": "5853cbcc-6b7f-4ef8-9711-4887b4deb912",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 79
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "82": {
+        "block_uuid": "69043d7f-46ef-4221-b0da-15eb53802a9d",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 79
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "83": {
+        "block_uuid": "7312bb2b-eccd-4df1-8a25-ddb84aebb895",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 79
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "84": {
+        "block_uuid": "84f4c9a7-88c7-483a-a213-d0bd9e720f53",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "source": "timer",
+                                "action": "ended",
+                                "delay": 36060
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 61
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "85": {
+        "block_uuid": "679acfa0-d09f-444c-9704-563f084c0d35",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 61
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "86": {
+        "block_uuid": "82450e77-d2b6-429a-8872-5ba3997e6f50",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎂 Oii! Passando rapidinho 😍\n\nVi que você teve interesse em comemorar seu aniversário aqui na Paparazzi, mas ainda não recebemos suas informações.\n\n✨ Não cobramos nada pela reserva.\n🎁 Temos benefícios exclusivos para aniversariantes.\n\nPara verificar sua data, me envie:\n\n👉 Nome:\n👉 Data da comemoração:\n👉 Quantidade aproximada de pessoas:\n👉 Horário desejado:\n\n⚠️ As datas mais procuradas costumam preencher rápido.\n\n🔥 *ISSO AQUI É PAPARAZZI!* 🔥",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 87
+                }
+            }
+        ]
+    },
+    "87": {
+        "block_uuid": "296f0c30-29f6-4fcc-a609-949051682d58",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 20
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "90": {
+        "block_uuid": "d5c735e6-d8b4-49a5-8fc5-93939e117d0a",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 COMEMORE SEU ANIVERSÁRIO NO GASTROBAR MAIS FAMOSO DE SÃO PAULO\n\n🍖 *SEXTA FEIRA* Buffet GRÁTIS de comida de boteco + churrasco\n⏰ Das 18h às 22h\n\n*COMO FUNCIONA!* \n\n🔥 Você e seus convidados podem se servir à vontade durante todo o horário do buffet, sem pagar nada a mais por isso.\n\n🎶 Shows ao vivo + DJs\n\n✨ *Benefícios para aniversariantes:* \n🎟 Aniversariante  VIP não paga entrada\n\n👥 10 convidados\n🥂 1 Garrafa de Chandon\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🪑 Espaço reservado para vc e seus convidados\n\n👥 20 convidados\n🍸 1 Garrafa de Gin \n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🪑 Espaço reservado para vc e seus convidados\n\n👥 30 convidados\n🥃 1 Garrafa de Whisky\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🪑 Espaço reservado para vc e seus convidados\n\n🎟 Cobramos somente a Entrada:\n🚹 Homem R$30\n🚺 Mulher R$20\n\n👶 Até 5 anos não paga\n🧒 Acima de 5 anos paga R$10\n\n🔥 Isso é incrível né? E o melhor de tudo: não cobramos nada pela reserva.\n\n\n👇 Clique abaixo e garanta sua reserva.",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "👉 CONFIRMAR RESERVA"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "video",
+                            "value": "02fc0131-2be7-4159-8d9d-2f22d29812ff",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 106,
+                "type": "question"
+            }
+        }
+    },
+    "91": {
+        "block_uuid": "2478a685-8b9c-4b55-acda-a1ec0b26b1c6",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 36060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 61
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "92": {
+        "block_uuid": "c028d277-4356-46d2-9ccf-3a79f87434b1",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Não conseguiu encontrar a informação que procura? 😊\n\nGostaria de um atendimento mais especializado e personalizado para o seu caso?\n\n👇 Clique no botão abaixo e fale diretamente com nossa equipe.\n\n✨ Isso aqui é Paparazzi! ✨",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "FALAR COM ATENDENTE",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "FALAR COM ATENDENTE",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 93
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "93": {
+        "block_uuid": "765f788f-7eb4-4b2d-ac4e-6574d2464140",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Perfeito! 🎉\n\nAgora vou te direcionar para falar com a Paty!\n\n👉 Peço apenas que descreva com clareza o que deseja e qualquer dúvida que tenha. Assim conseguiremos te atender mais rápido e da melhor forma possível.\n\nEm breve você será respondido(a). 💛\n\n✨ Isso aqui é Paparazzi! ✨",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "94": {
+        "block_uuid": "630f080f-b526-44d4-9269-c702c61e9bfc",
+        "question": [
+            {
+                "handler": "action",
+                "params": {
+                    "name": "change_status",
+                    "params": {
+                        "value": 109630671,
+                        "pipeline_id": 14128055
+                    }
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 98
+                }
+            }
+        ]
+    },
+    "95": {
+        "block_uuid": "dc5ed746-eef8-4f51-bb3e-52abade62ccc",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 COMEMORE SEU ANIVERSÁRIO NO GASTROBAR MAIS FAMOSO DE SÃO PAULO\n\n🍲 *SÁBADO* FEIJOADA GRÁTIS\n⏰ Das 12h às 16h\n\n*COMO FUNCIONA!*\n\n🔥 Você e seus convidados podem se servir à vontade durante todo o horário da feijoada, sem pagar nada a mais por isso.\n\n🎶 Shows ao vivo + DJs\n\n✨ *Benefícios para aniversariantes:*\n🎟 Aniversariante  VIP não paga entrada\n\n👥 10 convidados\n🥂 1 Garrafa de Chandon \n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para vc e seus convidados\n\n👥 20 convidados\n🍸 1 Garrafa de Gin\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para vc e seus convidados\n\n👥 30 convidados\n🥃 1 Garrafa de Whisky\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para vc e seus convidados\n\n🎟 Cobramos somente a Entrada:\n🚹 Homem R$30\n🚺 Mulher R$20\n\n👶 Até 5 anos não paga\n🧒 Acima de 5 anos paga R$10\n\n🔥 Isso é incrível né? E o melhor de tudo: não cobramos nada pela reserva.\n\n👇 Clique abaixo e garanta sua reserva.",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "type": "inline",
+                            "text": "👉 CONFIRMAR RESERVA"
+                        },
+                        {
+                            "type": "inline",
+                            "text": "👉 SÁBADO A NOITE"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "video",
+                            "value": "1592e141-9f87-44a5-b9ca-fd9f66c90398",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 SÁBADO A NOITE",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 96
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 110,
+                "type": "question"
+            }
+        }
+    },
+    "96": {
+        "block_uuid": "3861db0e-a192-4f4d-80ff-1426011a2fc4",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 COMEMORE SEU ANIVERSÁRIO NO GASTROBAR MAIS FAMOSO DE SÃO PAULO\n\n🌙 *SÁBADO À NOITE*\n⏰ A partir das 18h\n\n*COMO FUNCIONA!*\n\n🔥 Reúna seus amigos e familiares para uma noite inesquecível com música ao vivo, DJs e um ambiente incrível para comemorar seu aniversário.\n\n🍔 Além disso, contamos com diversos pratos, porções, lanches, drinks e bebidas disponíveis em nosso cardápio.\n\n🎶 Shows ao vivo + DJs\n\n✨ *Benefícios para aniversariantes:*\n\n🎟 Aniversariante + 1 acompanhante VIP\n\n👥 10 convidados\n🥂 1 Garrafa de Chandon\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🛋 Camarote para você e seus convidados\n\n👥 20 convidados\n🍸 1 Garrafa de Gin\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🛋 Camarote para você e seus convidados\n\n👥 30 convidados\n🥃 1 Garrafa de Whisky\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🛋 Camarote para você e seus convidados\n\n🎟 Cobramos somente a Entrada:\n🚹 Homem R$30\n🚺 Mulher R$20\n\n👶 Até 5 anos não paga\n🧒 Acima de 5 anos paga R$10\n\n🔥 Isso é incrível né? E o melhor de tudo: não cobramos nada pela reserva.\n\n👇 Clique abaixo e garanta sua reserva.",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "video",
+                            "value": "e461548e-6d40-4ba1-bb0d-80686a82bf33",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 108,
+                "type": "question"
+            }
+        }
+    },
+    "97": {
+        "block_uuid": "58989bdc-c76f-432f-91a5-a9cf9897408f",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 COMEMORE SEU ANIVERSÁRIO NO GASTROBAR MAIS FAMOSO DE SÃO PAULO\n\n🔥 *DOMINGO* CHURRASCO GRÁTIS\n⏰ Das 12h às 16h\n\n*COMO FUNCIONA!*\n\n🔥 Você e seus convidados podem se servir à vontade durante todo o horário do churrasco, sem pagar nada a mais por isso.\n\n🎶 Shows ao vivo + DJs\n\n✨ *Benefícios para aniversariantes:*\n\n🎟 Aniversariante  VIP não paga entrada\n\n👥 10 convidados\n🥂 1 Garrafa de Chandon\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 20 convidados\n🍸 1 Garrafa de Gin\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n👥 30 convidados\n🥃 1 Garrafa de Whisky\n🎂 Bolo da Sodiê ou\n🎈 Balão personalizado\n🪑 Espaço reservado para você e seus convidados\n\n🎟 Cobramos somente a Entrada:\n🚹 Homem R$30\n🚺 Mulher R$20\n\n👶 Até 5 anos não paga\n🧒 Acima de 5 anos paga R$10\n\n🔥 Isso é incrível né? E o melhor de tudo: não cobramos nada pela reserva.\n\n👇 Clique abaixo e garanta sua reserva.",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "attachments": [
+                        {
+                            "type": "video",
+                            "value": "c2b38619-2670-403d-96c9-15ae879d1d84",
+                            "is_external": true
+                        }
+                    ],
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 112,
+                "type": "question"
+            }
+        }
+    },
+    "98": {
+        "block_uuid": "ea3ff48a-b5ca-4752-a402-30b0dba9a12b",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉🥳 *UHUUUUL KKKKK! SUA RESERVA FOI CONFIRMADA COM SUCESSO!*\n\nEstamos muito felizes por você ter escolhido a Paparazzi para comemorar essa data tão especial, vamos fazer uma festa incrível!!!! 🥂✨\n\nISSO AQUI É PAPARAZZI 🔥",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 99
+                }
+            }
+        ]
+    },
+    "99": {
+        "block_uuid": "a98dd5e3-66a6-41e4-8243-9b9692a72723",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 305,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 100
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "100": {
+        "block_uuid": "85a30481-f00f-467e-96fc-b4e53d881df7",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Estava me esquecendo kk \n\n📷 Para proporcionarmos a melhor experiência e conforto para você e seus convidados, essas informações são muito importantes.\n\nME INFORME: 👇\n\n👉 Nome do aniversariante:\n👉 Data da comemoração:\n👉 Quantidade aproximada de convidados:\n👉 Horário desejado:\n\n⚠️ RESPONDA SOMENTE ÀS SOLICITAÇÕES ACIMA.\n\nApós enviar as informações, envie também uma foto de boa qualidade para criarmos seu convite personalizado para você enviar aos seus amigos e familiares.\n\n🔥 Vai ser uma comemoração inesquecível!\n\n✨ Isso aqui é Paparazzi! ✨",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 101
+                }
+            }
+        ]
+    },
+    "101": {
+        "block_uuid": "0c5fc57e-ee56-4f11-a26b-c83f82901952",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 102
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "102": {
+        "block_uuid": "8deecc51-e615-44fd-b137-399a755455eb",
+        "question": [
+            {
+                "handler": "reaction",
+                "params": {
+                    "emoji": "default",
+                    "messageType": "message"
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 103
+                }
+            }
+        ]
+    },
+    "103": {
+        "block_uuid": "e1751eb7-bbff-43e7-b5c0-25f7e3843eab",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Perfeito!\n\nRecebemos sua foto e suas informações com sucesso. ✅\n\nAgora nossa equipe irá preparar seu convite personalizado para você enviar aos seus amigos e familiares.\n\n⏳ Em breve seu flyer estará pronto.\n\nEnquanto isso, fique tranquilo(a), sua reserva já está registrada em nosso sistema.\n\n🥂 Estamos preparando tudo para que você e seus convidados tenham uma experiência incrível.\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "104": {
+        "block_uuid": "4707fd91-b8e9-413a-ac1c-91953a275231",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 105
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "105": {
+        "block_uuid": "080cd82a-be2b-4465-8fa6-01d6f27884f4",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Ei! Seu aniversário está quase garantido, falta apenas um passo. 🥳\n\n*Você já desbloqueou benefícios exclusivos para comemorar na Paparazzi, agora basta escolher o dia da sua festa.*\n\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🥂 Garrafa de bebida\n📷 Flyer personalizado\n🍖 Buffets grátis em dias selecionados\n\n🔥 Isso é incrível né? E o melhor de tudo: *não cobramos nada pela reserva.*\n\n👇 Escolha abaixo o dia da sua comemoração.\n\n🔥 Mais de 350 mil pessoas já viveram a experiência Paparazzi.\n\n✨ Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 SEXTA FEIRA",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "👉 SÁBADO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "👉 DOMINGO",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 SEXTA FEIRA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 90
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 SÁBADO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 95
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "👉 DOMINGO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 97
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 126,
+                "type": "question"
+            }
+        }
+    },
+    "106": {
+        "block_uuid": "7771b9ac-70c1-461f-81e9-dfb4bc1c25e6",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 107
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "107": {
+        "block_uuid": "fbc05b59-4c62-4edd-91f8-d726177f455e",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Opa! Vi que você conferiu os benefícios do seu aniversário, mas ainda não finalizou sua reserva.\n\nLembrando que a reserva é gratuita e você ainda pode garantir:\n\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🥂 Garrafa de bebida \n📷 Convite personalizado\n🪑 Espaço reservado ou camarote para você e seus convidados\n\n👇 Clique abaixo em *CONFIRMAR RESERVA* para finalizar.\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 131,
+                "type": "question"
+            }
+        }
+    },
+    "108": {
+        "block_uuid": "f2410350-d03f-4ddd-8abf-82606020ae50",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 109
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "109": {
+        "block_uuid": "ff8b098d-f118-4c65-aa2c-cb59f84517ea",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Opa! Vi que você conferiu os benefícios do seu aniversário, mas ainda não finalizou sua reserva.\n\nLembrando que a reserva é gratuita e você ainda pode garantir:\n\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🥂 Garrafa de bebida \n📷 Convite personalizado\n🪑 Espaço reservado ou camarote para você e seus convidados\n\n👇 Clique abaixo em *CONFIRMAR RESERVA* para finalizar.\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 133,
+                "type": "question"
+            }
+        }
+    },
+    "110": {
+        "block_uuid": "3d76b5fa-1552-455f-8182-10b1ee2f2196",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 111
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "111": {
+        "block_uuid": "d487c283-3c69-4448-8806-94c40980955e",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Opa! Vi que você conferiu os benefícios do seu aniversário, mas ainda não finalizou sua reserva.\n\nLembrando que a reserva é gratuita e você ainda pode garantir:\n\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🥂 Garrafa de bebida conforme quantidade de convidados\n📷 Convite personalizado\n🪑 Espaço reservado ou camarote para você e seus convidados\n\n👇 Clique abaixo em *CONFIRMAR RESERVA* para finalizar.\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 132,
+                "type": "question"
+            }
+        }
+    },
+    "112": {
+        "block_uuid": "3aa89119-efa2-47be-9281-ccd8cca9c2fe",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 113
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "113": {
+        "block_uuid": "96fd3864-8108-4543-afae-d94b1571a486",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🎉 Opa! Vi que você conferiu os benefícios do seu aniversário, mas ainda não finalizou sua reserva.\n\nLembrando que a reserva é gratuita e você ainda pode garantir:\n\n🎂 Bolo da Sodiê\n🎈 Balão personalizado\n🥂 Garrafa de bebida \n📷 Convite personalizado\n🪑 Espaço reservado ou camarote para você e seus convidados\n\n👇 Clique abaixo em *CONFIRMAR RESERVA* para finalizar.\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "👉 CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "👉 CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 94
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ],
+        "no_answer": {
+            "handler": "goto",
+            "params": {
+                "step": 134,
+                "type": "question"
+            }
+        }
+    },
+    "114": {
+        "block_uuid": "8bc39993-18ea-486a-863c-9b6fe35a7c7c",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🍾 Sua mesa está quase garantida!\n\nFalta apenas um passo para registrarmos sua reserva no PAPARAZZI GOLD BAR.\n\nMe informe:\n\n👉 Nome:\n👉 Data da reserva:\n👉 Quantidade de pessoas:\n👉 Horário desejado:\n\n✨ Reserva gratuita.\n\n🎶 Shows ao vivo + DJs\n🍖 Buffets grátis em dias selecionados\n⚽ Copa do Mundo AO VIVO nos telões\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "RESERVAR SEXTA",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR SÁBADO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR DOMINGO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "COPA DO MUNDO",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "RESERVAR SEXTA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 44
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR SÁBADO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 45
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR DOMINGO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 46
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "COPA DO MUNDO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 75
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "115": {
+        "block_uuid": "55cd67ae-1858-4c78-bb2a-8db84d7491ff",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 116
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "116": {
+        "block_uuid": "603ff88a-048a-49b4-9049-c5ac43c45c89",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🍾 Opa! Percebemos que você ainda não finalizou sua reserva.\n\n🏆 Com a Copa do Mundo e os eventos especiais, muitas mesas acabam sendo reservadas com antecedência.\n\n✨ Sua reserva é totalmente gratuita e leva menos de 1 minuto para ser concluída.\n\n👇 Clique abaixo e escolha uma das opções para continuar.\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "RESERVAR SEXTA",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR SÁBADO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "RESERVAR DOMINGO",
+                            "type": "inline"
+                        },
+                        {
+                            "text": "COPA DO MUNDO",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "RESERVAR SEXTA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 44
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR SÁBADO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 45
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "RESERVAR DOMINGO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 46
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    },
+                    {
+                        "value": "COPA DO MUNDO",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 75
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "117": {
+        "block_uuid": "8c34e0f6-3ef1-4a5e-a5cc-ffce9618d163",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 118
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "118": {
+        "block_uuid": "9d1df3d8-fec2-42db-b1f0-d0ae99f88a32",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🇧🇷🏆 FALTA APENAS UM PASSO!\n\nSua reserva para a Copa do Mundo ainda não foi concluída.\n\n⚠️ Em dias de jogos da Seleção, as mesas são limitadas e a procura é muito alta.\n\n🍖 Buffet grátis\n📺 Telões AO VIVO\n🎶 Shows + DJs\n🍻 Cerveja gelada e clima de Copa do início ao fim\n*Para finalizarmos sua reserva, me informe por favor:*\n\n👤 Nome completo:\n📅 Data da reserva:\n👥 Quantidade aproximada de pessoas:\n⏰ Horário desejado:\n👇 Clique abaixo e garanta sua mesa agora.\n\n🔥 ISSO AQUI É PAPARAZZI!",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "CONFIRMAR RESERVA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "CONFIRMAR RESERVA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 58
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "119": {
+        "block_uuid": "786a965b-e292-42dd-8526-7fb19f132a28",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🍾 Sua reserva para a Copa do Mundo está quase garantida!\n\nFalta apenas um passo para registrarmos sua mesa no PAPARAZZI GOLD BAR. 🏆\n\n⚠️ Em dias de jogos da Seleção Brasileira a procura é muito grande e as mesas são limitadas.\n\nMe informe:\n\n👉 Nome:\n👉 Data da reserva:\n👉 Quantidade de pessoas:\n👉 Horário desejado:\n\n✨ Não cobramos nada pela reserva.\n\n🎶 Shows ao vivo + DJs\n🍖 Buffets grátis nos dias de jogos\n📺 Jogos AO VIVO nos telões\n\n🔥 Isso aqui é Paparazzi!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            },
+            {
+                "handler": "goto",
+                "params": {
+                    "type": "question",
+                    "step": 120
+                }
+            }
+        ]
+    },
+    "120": {
+        "block_uuid": "4eaa2202-ee53-422f-8485-39bc582b354d",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "123": {
+        "block_uuid": "6435ca8a-97a1-48f4-a8a7-715d6c2235b9",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 74
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "124": {
+        "block_uuid": "0f9bd013-9fcb-422b-96d8-a154238701e8",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 125
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "125": {
+        "block_uuid": "e2c87121-0a61-4c43-87b2-77ecb236f5aa",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🚨🏆 ÚLTIMAS MESAS PARA A COPA DO MUNDO!\n\nSua solicitação ainda não foi finalizada.\n\n⚠️ Com a aproximação dos jogos da Seleção Brasileira, as reservas estão aumentando rapidamente.\n\n📺 Telões AO VIVO\n🍖 Buffet grátis nos dias de jogos\n🎶 Música ao vivo + DJs\n🍻 Drinks e cerveja gelada\n\n✨ Reserva totalmente gratuita.\n\n👇 Clique em *RESERVAR AGORA* antes que as mesas sejam preenchidas.\n\n🔥 ISSO AQUI É PAPARAZZI! 🔥",
+                    "type": "external",
+                    "buttons": [
+                        {
+                            "text": "RESERVAR AGORA",
+                            "type": "inline"
+                        }
+                    ],
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ],
+        "answer": [
+            {
+                "handler": "buttons",
+                "params": [
+                    {
+                        "value": "RESERVAR AGORA",
+                        "params": [
+                            {
+                                "handler": "goto",
+                                "params": {
+                                    "type": "question",
+                                    "step": 56
+                                }
+                            }
+                        ],
+                        "synonyms": []
+                    }
+                ]
+            }
+        ]
+    },
+    "126": {
+        "block_uuid": "1baeb9e1-9d4d-4346-9c67-989f6c4f8572",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 10860,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 127
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "127": {
+        "block_uuid": "3890a842-bbad-4c06-826f-94309c554fcf",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Oie tudo bem? Aqui é a Paty da Paparazzi\nConseguiu dar uma olhadinha nas informações que te enviei? Qual data gostaria de comemorar? Bora fazer uma festa incrível.!!! 🥳",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "128": {
+        "block_uuid": "8171ebb2-6af1-4262-939a-200a24bccd4a",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 14460,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 129
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "129": {
+        "block_uuid": "8e552de7-c1d5-487e-8175-81bc53063d0f",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "Oiee, tudo bem? Aqui é a Paty do Paparazzi.\nConseguiu dar uma olhadinha nas informações que te enviei?\n\nSe tiver qualquer dúvida pode me chamar aqui!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "130": {
+        "block_uuid": "c68898fc-9f9e-4f1a-8837-9316b5e2df7f",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 129
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "131": {
+        "block_uuid": "0e2e8619-d891-4f4d-b648-b453c88882cd",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 127
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "132": {
+        "block_uuid": "14e8a2b2-b61b-4d06-9843-08edee86467b",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 127
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "133": {
+        "block_uuid": "9d5aa984-6385-478f-bedd-086fc170b20c",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 127
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "134": {
+        "block_uuid": "8c485af5-f4b1-4d39-a36d-845e1cd460cf",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 127
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "135": {
+        "block_uuid": "9922113e-18d8-439b-b61e-365e5d6e6b33",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 18060,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 129
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "136": {
+        "block_uuid": "e9126750-fdee-427f-8979-46489dda78a5",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "delay": 60,
+                                "action": "ended",
+                                "source": "timer"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 137
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "137": {
+        "block_uuid": "15a6a935-d225-4899-bd76-33979eb8f792",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🥳 Ah, eu estava me esquecendo!\n\nAntes de finalizar, verifique se você já enviou as informações abaixo:\n\n👉 Nome do aniversariante\n👉 Data da reserva\n👉 Horário da reserva\n👉 Quantidade aproximada de pessoas\n\nEssas informações são muito importantes para prepararmos sua reserva da melhor forma e proporcionar uma experiência incrível para você e seus convidados.\n\n✅ Se você já enviou tudo, não precisa responder novamente. A Paty entrará em contato em breve para confirmar sua reserva.\n\n🔥 ISSO AQUI É PAPARAZZI!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "138": {
+        "block_uuid": "4301d731-8535-4860-a714-e3014701ab10",
+        "question": [
+            {
+                "handler": "waits",
+                "params": {
+                    "logic": "or",
+                    "conditions": [
+                        {
+                            "event": {
+                                "action": "received",
+                                "source": "message"
+                            },
+                            "action": {
+                                "type": "question",
+                                "step": 139
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "139": {
+        "block_uuid": "1b176fd1-5d6f-4135-b46a-9b71e8a125a2",
+        "question": [
+            {
+                "handler": "send_message",
+                "params": {
+                    "tag": "",
+                    "text": "🥳 Ah, eu estava me esquecendo!\n\nAntes de finalizar, verifique se você já enviou as informações abaixo:\n\n👉 Nome do aniversariante\n👉 Data da reserva\n👉 Horário da reserva\n👉 Quantidade aproximada de pessoas\n\nEssas informações são muito importantes para prepararmos sua reserva da melhor forma e proporcionar uma experiência incrível para você e seus convidados.\n\n✅ Se você já enviou tudo, não precisa responder novamente. A Paty entrará em contato em breve para confirmar sua reserva.\n\n🔥 ISSO AQUI É PAPARAZZI!",
+                    "type": "external",
+                    "recipient": {
+                        "type": "all_contacts",
+                        "way_of_communication": "over_all"
+                    },
+                    "is_in_starting_block": false,
+                    "send_to_all_chat_sources": true,
+                    "on_error": null
+                }
+            }
+        ]
+    },
+    "conversation": false
+}
