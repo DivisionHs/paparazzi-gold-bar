@@ -19,7 +19,9 @@ app = FastAPI(title="Paparazzi Gold Bar API")
 
 # Endpoint leve para health check do Render e para o ping de keep-alive
 # (UptimeRobot/GitHub Actions) que evita a hibernação do plano free.
-@app.get("/health")
+# Aceita GET e HEAD — o monitor free do UptimeRobot usa HEAD por padrão, que
+# devolvia 405 quando a rota só respondia a GET.
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
     return {"status": "ok"}
 
