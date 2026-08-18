@@ -9,7 +9,7 @@ import 'views/staff_gate.dart';
 // SUPABASE_URL/SUPABASE_KEY (chave anon) já usada pelo backend — só serve
 // pro client de autenticação, os dados continuam passando pelo FastAPI.
 const String _supabaseUrl = String.fromEnvironment('SUPABASE_URL');
-const String _supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+const String _supabaseAnonKey = String.fromEnvironment('SUPABASE_KEY');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

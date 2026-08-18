@@ -3,8 +3,8 @@
 #
 # Existe porque o Build Command do painel do Vercel tem limite de 256
 # caracteres, e o comando completo (clonar o Flutter + flutter build web
-# com os --dart-define de API_URL/SUPABASE_URL/SUPABASE_ANON_KEY) passa
-# disso. As variáveis abaixo (API_URL, SUPABASE_URL, SUPABASE_ANON_KEY)
+# com os --dart-define de API_URL/SUPABASE_URL/SUPABASE_KEY) passa
+# disso. As variáveis abaixo (API_URL, SUPABASE_URL, SUPABASE_KEY)
 # devem ser configuradas em Project Settings > Environment Variables no
 # Vercel — não aqui no script, e não no Build Command.
 #
@@ -22,4 +22,4 @@ flutter pub get
 flutter build web \
   --dart-define=API_URL="$API_URL" \
   --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-  --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+  --dart-define=SUPABASE_KEY="$SUPABASE_KEY"
