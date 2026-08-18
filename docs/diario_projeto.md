@@ -376,6 +376,30 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `render.yaml` (novo — blueprint de deploy do Render)
 - `docs/diario_projeto.md`
 
+### Registro [17/08/2026] — Correção de Documentação e Validação com Lead Real (Foto e QR Code)
+
+#### O que foi feito
+
+- **Divergência encontrada entre documentação e código:** ao retomar o trabalho no formulário do convidado, uma auditoria do código-fonte (não só do diário/CLAUDE.md) mostrou que `frontend/lib/views/register_screen.dart` já tem a tela "Passaporte VIP" completa (QR Code real via `qr_flutter`, usando o `qr_code_token` devolvido por `POST /convidados/confirmar`) e que `frontend/lib/views/portaria_screen.dart` já implementa a Portaria Expressa inteira (leitura de câmera via `mobile_scanner`, os 3 estados de resultado, busca manual por CPF, modo VIP com confete). O backend (`backend/app/routes/convidados.py`) também já tinha as rotas `POST /convidados/validar-qr` e `GET /convidados/buscar-cpf/{cpf}` implementadas. Nenhum desses itens estava de fato pendente — só não tinham sido marcados como concluídos no diário nem no checklist (seção 3), provavelmente implementados numa sessão anterior sem o devido registro. Checklist da seção 3 corrigido nesta data.
+- **Único item genuinamente pendente da Portaria/ERP:** a fila assíncrona de abertura de comanda no Epoc ERP — confirmado (via busca no backend) que nenhum código toca a tabela `comandas_temporarias` nem faz qualquer chamada ao Epoc. Segue bloqueado por falta de acesso à API do Epoc (nenhuma mudança nesta data).
+- **Comentário obsoleto corrigido em `frontend/lib/services/api_service.dart`:** o método `buscarConvidadoPorCpf` tinha um comentário de 4 linhas avisando que `GET /convidados/buscar-cpf/{cpf}` "ainda não existe no backend" — desatualizado, já que a rota existe e está em uso pela busca manual da Portaria. Comentário removido/atualizado.
+- **Dúvida do usuário sobre o deploy do Vercel:** o usuário reportou não se recordar se o build publicado no Vercel já é o que busca a foto do aniversariante dinamicamente a partir do `token` da URL (relato: o formulário publicado parece mostrar uma foto fixa/fictícia) e relatou que o QR Code gerado no site publicado parece **fixo**, não um UUID novo por convidado. Como não há nenhuma referência a uma URL do Render nem a um `vercel.json`/config de build neste repositório, não foi possível confirmar por código qual `API_URL` (`--dart-define`) o build publicado no Vercel está usando — há indício de que o deploy publicado é anterior a este fluxo dinâmico (foto/QR reais), ou está apontando para um backend fora do ar/errado. **Ação pendente do usuário:** conferir no dashboard do Vercel (1) se o último deploy é deste repositório/commit atual e (2) qual valor de `API_URL` foi usado no build (`flutter build web --dart-define=API_URL=...`).
+- **Validação read-only contra dados reais, sem enviar nenhuma mensagem no chat do Kommo, para responder às duas dúvidas acima:**
+  1. Localizado o pipeline **"Novo funil teste"** (`pipeline_id` `14128055`) via `GET /api/v4/leads/pipelines`; 3 leads nele têm os 5 Custom Fields obrigatórios preenchidos. Usado o Lead **`51343366`** ("Geovane", reserva em `2026-09-08`) — já tinha registro em `aniversariantes` de um teste anterior (`token_exclusivo` `ec69939c-39f0-4c78-a807-9cd277b1947d`).
+  2. **Foto real, não fictícia — confirmado:** baixados os bytes da foto atual do Custom Field "Foto do aniversariante" (`2068458`) direto do CDN do Kommo (`kommo_service.montar_url_cdn_arquivo`) e os bytes de `foto_perfil_url` salva no Supabase para esse mesmo lead. SHA-256 e tamanho em bytes **idênticos** nos dois — prova que o backend está salvando exatamente a foto que o aniversariante enviou pelo chat, não uma foto de placeholder.
+  3. **QR Code com UUID único — confirmado:** consultados (`SELECT` read-only) os últimos registros reais da tabela `convidados`; todos os `qr_code_token` retornados são diferentes entre si, confirmando na prática (não só pela leitura do schema, `DEFAULT gen_random_uuid()`) que cada confirmação de presença gera um token novo — nenhum valor fixo do lado do backend/banco.
+  4. **Conclusão:** a lógica do backend (foto real + QR único) está correta e validada com dados reais. O comportamento "foto fictícia / QR fixo" relatado pelo usuário no site publicado no Vercel é, com alta probabilidade, um problema do **deploy publicado** (build desatualizado ou `API_URL` incorreta/apontando para um backend fora do ar), não do código atual do repositório.
+  5. Token real e válido disponível para o usuário testar diretamente o formulário publicado (local ou Vercel) e comparar com o esperado (nome "Geovane", foto real do lead `51343366`): `ec69939c-39f0-4c78-a807-9cd277b1947d`.
+- **Backend em produção no Render confirmado no ar (achado não documentado até então):** o `render.yaml` (registro de 11/08/2026) só descrevia o *blueprint*, sem nenhuma URL viva registrada em lugar nenhum do repositório. Testado diretamente: `GET https://paparazzi-api.onrender.com/health` responde `200 {"status":"ok"}`, e `GET /aniversariantes/validar-token/ec69939c-39f0-4c78-a807-9cd277b1947d` devolve os dados corretos do lead `51343366` (nome + `foto_perfil_url` batendo com o achado do item acima) — ou seja, o backend de produção já está deployado, acessível publicamente e servindo dados reais e corretos do Supabase. CORS também confirmado funcionando (`CORSMiddleware(allow_origins=["*"])` em `main.py`, testado com header `Origin: https://app-paparazzi.vercel.app` simulado — resposta veio com `access-control-allow-origin` refletido corretamente).
+- **Causa mais provável do "deploy antigo" no Vercel identificada pelo usuário:** o projeto do Vercel parece estar conectado a um repositório Git com o mesmo nome do atual, mas que não é mais o mesmo repositório (histórico do Git deste repositório começa do zero em `d1ace7c "chore: estrutura inicial do repositório"` — indício de que o repositório atual foi recriado/reiniciado em algum momento após o trabalho já registrado neste diário ter sido feito). Isso é consistente com uma falha comum de integração do Vercel: quando um repositório GitHub é apagado e recriado com o mesmo nome, o ID interno muda e a integração Git do Vercel (que rastreia por ID, não por nome) fica órfã, continuando a servir o último build que conseguiu puxar do repositório antigo. Confirmado (via `git ls-files`) que `frontend/build/` **não é** a causa — está corretamente no `.gitignore`, nunca foi commitado.
+- **Ação recomendada (fora do escopo de execução do Claude Code — requer acesso ao dashboard do Vercel):** tentar primeiro reconectar o repositório Git dentro do MESMO projeto Vercel existente (Settings → Git → Disconnect, depois Connect novamente apontando para o repositório atual) — preserva domínio, variáveis de ambiente e configuração de build já existentes. Se o Vercel não conseguir localizar/religar ao repositório correto, importar como projeto novo (New Project → Import Git Repository), reconfigurando build command com o backend de produção já confirmado: `flutter build web --dart-define=API_URL=https://paparazzi-api.onrender.com`.
+- **Nenhuma escrita foi feita no Kommo nem no Supabase durante esta validação** — só `GET`/`SELECT`. Script de investigação usado ficou fora do repositório (pasta de scratchpad da sessão), por ser só uma ferramenta de diagnóstico pontual, não parte do produto.
+
+#### Arquivos afetados
+
+- `docs/diario_projeto.md` (este registro + checklist da seção 3 corrigido)
+- `frontend/lib/services/api_service.dart` (comentário obsoleto sobre `buscar-cpf` corrigido)
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)
@@ -394,16 +418,18 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 
 ### Formulário do Convidado (Flutter Web)
 
-- [x] Exibição dos dados e foto do aniversariante a partir do token da URL.
-- [x] Coleta dos dados do convidado (Nome, CPF, WhatsApp, Data de Nascimento).
-- [ ] Exibição da tela de confirmação com a geração do QR Code individual (UUID v4).
+- [x] Exibição dos dados e foto do aniversariante a partir do token da URL (`register_screen.dart`, prioriza `foto_perfil_url`, com fallback para `foto_url`).
+- [x] Coleta dos dados do convidado (Nome, CPF com validação de dígito verificador, WhatsApp, Data de Nascimento), com máscaras e validação client-side.
+- [x] Exibição da tela de confirmação com a geração do QR Code individual (UUID v4). **Atualizado (17/08/2026):** item estava marcado como pendente por desatualização do diário — a tela "Passaporte VIP" (`_buildPassaporteVip`) com `qr_flutter` já existe no código e foi validada nesta data (ver Registro [17/08/2026] abaixo): o backend gera um `qr_code_token` diferente a cada confirmação (`gen_random_uuid()` no Postgres), confirmado consultando registros reais em `convidados`.
 
 ### Validação na Portaria e Integração com ERP (Flutter Mobile/Web + FastAPI + Epoc ERP)
 
-- [ ] Endpoint backend para validação do QR Code (`POST /convidados/validar-qr`).
-- [ ] Interface simplificada no app da portaria para leitura de QR Code via câmera e busca por CPF/Nome.
-- [ ] Resposta visual instantânea na tela da portaria (Acesso Liberado 🟢 / Negado 🔴).
-- [ ] Agendamento em fila assíncrona para abertura de comanda na API do Epoc ERP vinculado ao CPF validado.
+- [x] Endpoint backend para validação do QR Code (`POST /convidados/validar-qr`). **Atualizado (17/08/2026):** item estava marcado como pendente por desatualização do diário — a rota já existe em `convidados.py`, com os três estados (`LIBERADO`/`JA_UTILIZADO`/`INVALIDO`) e detecção de quando o CPF lido é o do próprio aniversariante da lista.
+- [x] Interface simplificada no app da portaria para leitura de QR Code via câmera e busca por CPF/Nome. **Atualizado (17/08/2026):** `portaria_screen.dart` já implementa a leitura via `mobile_scanner` (acessível em `?modo=portaria`) e o modal de busca manual por CPF (`GET /convidados/buscar-cpf/{cpf}`), incluindo card VIP com confete quando o CPF é do próprio aniversariante.
+- [x] Resposta visual instantânea na tela da portaria (Acesso Liberado 🟢 / Negado 🔴). **Atualizado (17/08/2026):** implementado com reset automático de 3s e toque na tela para voltar ao scanner.
+- [ ] Agendamento em fila assíncrona para abertura de comanda na API do Epoc ERP vinculado ao CPF validado. **Sem acesso à API do Epoc até 17/08/2026** — item genuinamente não iniciado (nenhum código toca a tabela `comandas_temporarias` nem faz nenhuma chamada ao Epoc). Único item real pendente desta seção.
+
+**Nota (17/08/2026):** até este registro, o diário e o `CLAUDE.md` descreviam o formulário do convidado e a portaria como parcialmente pendentes, mas uma auditoria do código-fonte mostrou que ambos já estavam implementados de ponta a ponta (provavelmente concluídos em uma sessão anterior sem o devido registro no diário). Ver Registro [17/08/2026] — Correção de Documentação e Validação com Lead Real para o detalhamento da divergência encontrada e da validação feita.
 
 ## 4. Registro de Débitos Técnicos e Decisões de Arquitetura
 

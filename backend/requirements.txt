@@ -22,6 +22,7 @@ packaging==26.2
 pillow==12.3.0
 postgrest==2.31.0
 propcache==0.5.2
+psycopg2-binary==2.9.12
 pycparser==3.0
 pydantic==2.13.4
 pydantic-settings==2.14.2

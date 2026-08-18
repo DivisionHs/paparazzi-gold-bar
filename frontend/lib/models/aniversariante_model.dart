@@ -33,3 +33,33 @@ class ConfirmacaoResultado {
     return ConfirmacaoResultado(qrCodeToken: json['qr_code_token'].toString());
   }
 }
+
+// Uma linha do painel de aniversariantes do dia (GET /aniversariantes/hoje,
+// rota staff-only). horarioReserva/estimativaConvidados vêm do Kommo,
+// persistidos desde a migration 20260817_01; quantidadeConfirmada é sempre
+// contada ao vivo na tabela `convidados`.
+class AniversarianteHoje {
+  final String leadId;
+  final String nomeCompleto;
+  final String? horarioReserva;
+  final int? estimativaConvidados;
+  final int quantidadeConfirmada;
+
+  AniversarianteHoje({
+    required this.leadId,
+    required this.nomeCompleto,
+    this.horarioReserva,
+    this.estimativaConvidados,
+    required this.quantidadeConfirmada,
+  });
+
+  factory AniversarianteHoje.fromJson(Map<String, dynamic> json) {
+    return AniversarianteHoje(
+      leadId: json['lead_id'].toString(),
+      nomeCompleto: json['nome_completo']?.toString() ?? 'Aniversariante',
+      horarioReserva: json['horario_reserva']?.toString(),
+      estimativaConvidados: json['estimativa_convidados'] as int?,
+      quantidadeConfirmada: json['quantidade_confirmada'] as int? ?? 0,
+    );
+  }
+}

@@ -1,9 +1,11 @@
 import os
 import re
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 from datetime import date, datetime, timezone
 from supabase import create_client, Client
+
+from backend.app.services.auth_service import obter_funcionario_autenticado
 
 router = APIRouter(prefix="/convidados", tags=["Convidados"])
 
@@ -141,7 +143,7 @@ def _buscar_aniversariante_da_lista(lead_id: str | None, cpf_convidado: str | No
 #    A resposta sempre volta com HTTP 200: quem diferencia acesso liberado ou
 #    negado é o campo "status" do corpo, no mesmo padrão já usado nos webhooks
 #    da Kommo (evita misturar HTTP status de transporte com regra de negócio).
-@router.post("/validar-qr")
+@router.post("/validar-qr", dependencies=[Depends(obter_funcionario_autenticado)])
 async def validar_qr_code(payload: ValidarQrSchema):
     try:
         resposta = supabase.table("convidados")\
@@ -213,7 +215,7 @@ async def validar_qr_code(payload: ValidarQrSchema):
 
 # 4. Endpoint de contingência usado pelo app da portaria quando o convidado
 #    chega sem o QR Code em mãos (busca manual por CPF).
-@router.get("/buscar-cpf/{cpf}")
+@router.get("/buscar-cpf/{cpf}", dependencies=[Depends(obter_funcionario_autenticado)])
 async def buscar_convidado_por_cpf(cpf: str):
     # Limpa pontos e traço para consultar sempre pelos 11 dígitos puros,
     # do mesmo jeito que o CPF é gravado no cadastro (POST /confirmar).

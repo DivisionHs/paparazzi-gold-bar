@@ -111,6 +111,25 @@ def converter_valor_data_kommo(valor: str) -> str | None:
     return None
 
 
+def converter_estimativa_convidados_kommo(valor: str | None) -> int | None:
+    """
+    Converte o valor bruto do Custom Field "Estimativa de Convidados" (ID
+    2068456, ex.: "20") para inteiro. Campo não crítico para o cadastro em
+    si (só alimenta o painel de aniversariantes do dia) — se vier vazio ou
+    num formato inesperado, loga um aviso e devolve None em vez de derrubar
+    o upsert por causa dele, mesmo princípio já usado em
+    converter_valor_data_kommo.
+    """
+    if not valor:
+        return None
+
+    try:
+        return int(valor.strip())
+    except ValueError:
+        logger.warning(f"⚠️ Não foi possível interpretar a Estimativa de Convidados recebida do Kommo: '{valor}'.")
+        return None
+
+
 def formatar_valor_para_log(valor) -> str:
     """
     Formata o valor de um Custom Field para exibição legível nos logs de
@@ -139,7 +158,12 @@ def eh_url_http_valida(valor: str | None) -> bool:
 
 
 async def finalizar_cadastro_aniversariante(
-    lead_id: str, nome_aniversariante: str, foto_bytes: bytes, data_reserva: str | None, horario_reserva: str | None = None
+    lead_id: str,
+    nome_aniversariante: str,
+    foto_bytes: bytes,
+    data_reserva: str | None,
+    horario_reserva: str | None = None,
+    estimativa_convidados_raw: str | None = None,
 ) -> dict:
     """
     Único ponto de gravação do fluxo: envia ao Supabase Storage os DOIS
@@ -179,6 +203,20 @@ async def finalizar_cadastro_aniversariante(
     }
     if data_reserva:
         dados_aniversariante["data_reserva"] = data_reserva
+
+    # Horário e estimativa de convidados: antes só usados pra desenhar o
+    # flyer e descartados (ver diario_projeto.md, registro de 17/08/2026) —
+    # agora também persistidos, pra alimentar o painel de aniversariantes do
+    # dia. Reaproveita a mesma normalização já usada no flyer
+    # (flyer_generator.formatar_horario_exibicao, "12" -> "12:00") pra não
+    # duplicar essa lógica.
+    horario_normalizado = flyer_generator.formatar_horario_exibicao(horario_reserva)
+    if horario_normalizado:
+        dados_aniversariante["horario_reserva"] = horario_normalizado
+
+    estimativa_convidados = converter_estimativa_convidados_kommo(estimativa_convidados_raw)
+    if estimativa_convidados is not None:
+        dados_aniversariante["estimativa_convidados"] = estimativa_convidados
 
     try:
         supabase_client.table("aniversariantes").upsert(
@@ -306,6 +344,7 @@ async def processar_lead_confirmado(lead_id: str) -> None:
         nome_aniversariante = campos[CAMPO_NOME_FLYER_ID]
         data_reserva = converter_valor_data_kommo(campos[CAMPO_DATA_DA_RESERVA_ID])
         horario_reserva = campos[CAMPO_HORARIO_ID]
+        estimativa_convidados_raw = campos[CAMPO_ESTIMATIVA_CONVIDADOS_ID]
         valor_foto = campos[CAMPO_FOTO_ID]
 
         # O endpoint oficial de arquivos (GET /api/v4/files/{uuid}) devolve
@@ -353,7 +392,9 @@ async def processar_lead_confirmado(lead_id: str) -> None:
             return
         foto_bytes = resposta_imagem.content
 
-        resultado = await finalizar_cadastro_aniversariante(str(lead_id), nome_aniversariante, foto_bytes, data_reserva, horario_reserva)
+        resultado = await finalizar_cadastro_aniversariante(
+            str(lead_id), nome_aniversariante, foto_bytes, data_reserva, horario_reserva, estimativa_convidados_raw
+        )
         logger.info(f"🏁 Processamento em background concluído para o Lead {lead_id}: {resultado}")
 
     except Exception as e:

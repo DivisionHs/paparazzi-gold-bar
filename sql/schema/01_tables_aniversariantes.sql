@@ -11,6 +11,7 @@
 --   - 20260804_01_add_data_reserva_aniversariantes.sql (coluna data_reserva)
 --   - 20260804_02_remove_status_cadastro_aniversariantes.sql (remoção de status_cadastro)
 --   - 20260807_01_add_foto_perfil_url_aniversariantes.sql (coluna foto_perfil_url)
+--   - 20260817_01_add_horario_estimativa_aniversariantes.sql (colunas horario_reserva e estimativa_convidados)
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS public.aniversariantes (
@@ -22,5 +23,7 @@ CREATE TABLE IF NOT EXISTS public.aniversariantes (
     foto_perfil_url TEXT, -- Link da foto ORIGINAL do aniversariante (Custom Field 2068458), exibida no formulário do convidado
     data_reserva DATE, -- Sincronizada com o Custom Field "Data da reserva" (ID 2068460) do Lead no Kommo
     cpf VARCHAR(11), -- Ainda não populado por nenhum fluxo real (ver migration 20260725_01)
+    horario_reserva TIME, -- Sincronizada com o Custom Field "Horário da reserva" (ID 2068854), normalizada via flyer_generator.formatar_horario_exibicao
+    estimativa_convidados INTEGER, -- Sincronizada com o Custom Field "Estimativa de Convidados" (ID 2068456)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

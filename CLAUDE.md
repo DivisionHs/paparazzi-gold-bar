@@ -174,6 +174,7 @@ A pasta `sql/` na raiz do repositório é a **fonte da verdade versionada** do b
 - `sql/migrations/20260725_01_add_cpf_aniversariantes.sql` — adiciona a coluna `cpf` à tabela `aniversariantes` (hoje ainda não populada por nenhum fluxo real).
 - `sql/migrations/20260804_01_add_data_reserva_aniversariantes.sql` — adiciona a coluna `data_reserva` à tabela `aniversariantes`, sincronizada com o campo "Data da reserva" (ID `2068460`) do Lead no Kommo.
 - `sql/migrations/20260804_02_remove_status_cadastro_aniversariantes.sql` — remove a coluna `status_cadastro` da tabela `aniversariantes`.
+- `sql/migrations/20260817_01_add_horario_estimativa_aniversariantes.sql` — adiciona `horario_reserva` (TIME) e `estimativa_convidados` (INTEGER) à tabela `aniversariantes`, sincronizadas com os Custom Fields "Horário da reserva" (ID `2068854`) e "Estimativa de Convidados" (ID `2068456`) do Lead no Kommo — antes só usadas para desenhar o flyer e descartadas, agora persistidas para alimentar o painel de aniversariantes do dia.
 - `sql/views/01_vw_analytics_convidados.sql` — DDL da view `vw_analytics_convidados`, consumida por `GET /convidados/resumo/{lead_id}`.
 
 **Instrução:** ao alterar qualquer rota do backend que dependa de colunas do Supabase, consulte primeiro os arquivos em `sql/` para confirmar o schema vigente antes de assumir a estrutura das tabelas.

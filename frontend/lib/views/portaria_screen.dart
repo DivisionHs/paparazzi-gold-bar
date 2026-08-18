@@ -120,10 +120,12 @@ class _PortariaScreenState extends State<PortariaScreen> {
       _confettiController.play();
     }
 
-    // Reset automático: depois de 3s a tela volta sozinha para o modo leitura,
-    // liberando o porteiro para bipar o próximo convidado sem precisar tocar na tela.
+    // Reset automático: depois de 7s a tela volta sozinha para o modo leitura,
+    // liberando o porteiro para bipar o próximo convidado sem precisar tocar na
+    // tela. 7s (era 3s) dá tempo de ler nome/CPF antes de sumir; quem quiser
+    // liberar a leitura mais rápido pode tocar na tela a qualquer momento.
     _timerReset?.cancel();
-    _timerReset = Timer(const Duration(seconds: 3), _voltarParaEscaneamento);
+    _timerReset = Timer(const Duration(seconds: 7), _voltarParaEscaneamento);
   }
 
   void _voltarParaEscaneamento() {
