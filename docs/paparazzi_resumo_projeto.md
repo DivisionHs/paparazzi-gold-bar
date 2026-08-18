@@ -23,12 +23,14 @@ A Fase 1 foca em eliminar o trabalho manual de criação de mídias, digitalizar
 - **Geração de QR Code Individual:** Pós-cadastro, o convidado recebe na tela o seu passe de acesso individual com QR Code (UUID v4).
 - **Validador da Portaria (App Flutter):** A equipe da recepção bipa o QR Code no celular/tablet em 2 segundos, liberando o acesso visualmente (Sinal Verde 🟢).
 - **Abertura Assíncrona de Comanda (Epoc ERP):** A validação do QR Code dispara automaticamente a criação da comanda no sistema de caixa em segundo plano, sem travar a fila da entrada.
+- **Login de Funcionários e Painel de Aniversariantes do Dia (adicionado em 18/08/2026):** acesso à Portaria e a um novo painel operacional (aniversariantes com reserva no dia, horário, estimativa e convidados já confirmados) passam a exigir login (Supabase Auth). Contas hoje são criadas manualmente por script administrativo — sem tela de autoatendimento nesta primeira versão (ver Fase 2).
 
 ## 4. Visão de Futuro / Fase 2 (Roadmap de Expansão)
 
 A Fase 2 foca em inteligência de dados, retenção de clientes e expansão da plataforma:
 
 - **Hub do Aniversariante:** Painel web para o aniversariante acompanhar a quantidade de convidados confirmados na sua lista em tempo real.
+- **Gestão de Contas de Funcionário (prioridade curta, "Fase 1.5"):** hoje criar uma conta de acesso exige rodar um script administrativo manualmente — não escala para múltiplos funcionários/turnos. Evolução proposta: tela dentro do próprio Hub, visível só a um papel "admin" (guardado em `user_metadata` do Supabase Auth), com formulário de nome/e-mail/senha temporária, chamando um endpoint de backend que usa a chave `service_role` (nunca exposta ao app) para criar a conta. CPF/telefone entram como dado de perfil (útil para auditoria de quem validou qual entrada), não como identificador de login — Supabase Auth é nativamente e-mail/telefone, e usar CPF como login exigiria uma camada própria de mapeamento sem ganho real. Troca de senha obrigatória no primeiro login e reset de senha self-service ficam para uma iteração seguinte dessa mesma frente.
 - **Motor de Remarketing:** Automações no CRM para disparar convites de aniversário em massa e ofertas exclusivas para os convidados cadastrados na base no ano anterior.
 - **BI e Analytics Operacional:** Dashboard mostrando gasto médio por lista, horários de pico de entrada, taxa de conversão de convidados e faixa etária do público.
 - **Substituição Gradual do ERP:** Expansão de módulos proprietários de comanda e caixa para reduzir a dependência do ERP legado.

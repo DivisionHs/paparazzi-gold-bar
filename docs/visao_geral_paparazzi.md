@@ -7,8 +7,8 @@ O documento deve começar explicando de forma simples a jornada da informação 
 - O **Kommo CRM** captura a foto e os dados da reserva via WhatsApp.
 - O **FastAPI (Backend Central)** recebe o webhook, processa a foto com a moldura dourada, salva no banco e gera a URL única com token seguro.
 - O **Supabase (PostgreSQL e Storage)** armazena a foto, os dados do aniversariante e os cadastros dos convidados.
-- O **Flutter Web (Vercel)** exibe o formulário para os convidados confirmarem presença e gera o QR Code individual.
-- O **App de Portaria (Flutter)** bipa o QR Code do convidado e aciona, em segundo plano, a API do Epoc ERP para abertura da comanda.
+- O **Flutter Web (Vercel)** exibe o formulário para os convidados confirmarem presença e gera o QR Code individual — este lado continua público, sem login.
+- O **App de Portaria (Flutter)**, desde 18/08/2026, vive atrás de um login de funcionário (Supabase Auth) — bipa o QR Code do convidado, aciona em segundo plano a API do Epoc ERP para abertura da comanda, e divide o mesmo "Hub" pós-login com o painel de aniversariantes do dia.
 
 ## 2. Fluxo Operacional Passo a Passo (Jornada da Fase 1)
 
@@ -44,11 +44,14 @@ O sistema valida se o CPF já está na lista e gera na tela um QR Code individua
 
 ### Passo 5 - Checagem Expressa na Portaria (App Portaria)
 
-Na chegada ao bar, o convidado apresenta o QR Code.  
-O porteiro faz a leitura com a câmera e a tela responde instantaneamente com:
+**Desde 18/08/2026, o funcionário precisa estar logado** (Supabase Auth, e-mail/senha) para acessar a Portaria — o login abre um Hub administrativo, de onde se acessa tanto a Portaria quanto o painel de aniversariantes do dia (ver Passo 5.1). O fluxo de leitura em si não muda: na chegada ao bar, o convidado apresenta o QR Code, o porteiro faz a leitura com a câmera e a tela responde instantaneamente com:
 
 - Sinal Verde 🟢 (Acesso Liberado), ou
 - Sinal Vermelho 🔴 (QR Code inválido ou já utilizado).
+
+### Passo 5.1 - Painel de Aniversariantes do Dia (Hub, staff-only)
+
+Mesmo Hub pós-login da Portaria: uma tela lista os aniversariantes com reserva para o dia — nome, horário da reserva, estimativa de convidados (ambos vindos do Kommo, persistidos no Supabase desde 18/08/2026) e a quantidade real de convidados já confirmados (contada ao vivo na tabela de convidados). Serve pra equipe ter uma visão rápida do movimento esperado sem precisar consultar o Kommo diretamente.
 
 ### Passo 6 - Integração com Comanda (Epoc ERP)
 
@@ -62,9 +65,13 @@ O documento precisa descrever o que guardamos no banco de dados para garantir o 
 
 - Identificador único do lead no Kommo.
 - Nome completo do aniversariante (a partir do Custom Field "Nome do flyer").
-- Data da reserva, informada diretamente pelo cliente ao Salesbot (Custom Field "Data da reserva" do Lead no Kommo).
+- Data, horário e estimativa de convidados da reserva, informados diretamente pelo cliente ao Salesbot (Custom Fields nativos do Lead no Kommo) — horário e estimativa persistidos no Supabase desde 18/08/2026, antes eram usados só para desenhar o flyer e descartados.
 - Token exclusivo (UUID v4) que identifica o link da lista.
-- Link da foto do flyer gerado.
+- Link da foto do flyer gerado e da foto original enviada pelo cliente.
+
+### Contas de Funcionário (Supabase Auth)
+
+Desde 18/08/2026, o acesso da equipe (Portaria, painel de aniversariantes do dia) exige login. Não é uma tabela própria do projeto — usa o esquema nativo de autenticação do Supabase (`auth.users`), gerenciado hoje via script administrativo pontual, sem tela de autoatendimento ainda (ver `docs/paparazzi_resumo_projeto.md`, seção de Fase 2, para o plano de evolução).
 
 **Observação sobre o momento de criação:** o registro só é inserido nesta tabela quando o Lead chega na etapa "PROCESSANDO FLYER" (`status_id` `109983139`) com os 5 Custom Fields obrigatórios já preenchidos — é o único INSERT do fluxo, disparado por um único webhook. Não existe mais uma coluna de status intermediário (`status_cadastro`) nem qualquer estado intermediário guardado no Lead do Kommo ou no Supabase, já que não há mais coleta incremental via chat.
 

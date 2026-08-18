@@ -400,6 +400,40 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `docs/diario_projeto.md` (este registro + checklist da seção 3 corrigido)
 - `frontend/lib/services/api_service.dart` (comentário obsoleto sobre `buscar-cpf` corrigido)
 
+### Registro [18/08/2026] — Login de Funcionários (Supabase Auth) + Painel de Aniversariantes do Dia
+
+#### O que foi feito
+
+- **Ajuste de UX na Portaria (pedido do usuário após teste real em campo):** o resultado do scan (verde/vermelho/laranja) sumia rápido demais — 3s não dava tempo de ler nome/CPF na tela. Aumentado para 7s (`portaria_screen.dart`); o toque na tela pra liberar leitura antes do tempo já existia (`GestureDetector` + texto "Toque na tela para voltar ao scanner"), só não tinha sido notado.
+- **Decisão de produto (planejada com `EnterPlanMode`, plano aprovado antes de codar):** login de funcionário vira a porta de entrada de tudo que é operacional. Portaria (antes pública via `?modo=portaria`) e um painel novo de aniversariantes do dia passam a viver dentro de um Hub pós-login. O fluxo do convidado (`?token=`) continua público. Autenticação via Supabase Auth, um usuário por funcionário (não senha única compartilhada) — decisão do usuário, ver conversa da sessão.
+- **Persistência de horário/estimativa:** `horario_reserva` (TIME) e `estimativa_convidados` (INTEGER) — Custom Fields do Kommo que antes só eram usados pra desenhar o flyer e descartados — passam a ser gravados em `aniversariantes` (`webhooks.py::finalizar_cadastro_aniversariante`, novo parâmetro `estimativa_convidados_raw` + nova `converter_estimativa_convidados_kommo`, reaproveitando `flyer_generator.formatar_horario_exibicao` já existente pra normalizar o horário).
+- **Novo endpoint `GET /aniversariantes/hoje` (staff-only):** filtra `aniversariantes` por `data_reserva = hoje`, conta convidados confirmados por `lead_id` (2 queries + merge em Python — sem view SQL nova, volume diário baixo não justifica).
+- **Autenticação sem segredo novo:** `backend/app/services/auth_service.py`, dependency `obter_funcionario_autenticado`, valida `Authorization: Bearer <token>` chamando `supabase_client.auth.get_user(token)` — método pronto do SDK `supabase-py` já usado em todo o backend (por baixo, `GET /auth/v1/user` na própria API do Supabase). Decisão tomada por um agente de planejamento (`Plan` subagent) depois de investigar o SDK instalado e achar que ele já expunha esse método pronto — descartou tanto decodificação local de JWT (exigiria `SUPABASE_JWT_SECRET` novo) quanto uma chamada HTTP manual (redundante, o SDK já faz isso). Protegidas: `POST /convidados/validar-qr`, `GET /convidados/buscar-cpf/{cpf}`, `GET /aniversariantes/hoje`. Não há RLS por trás — é só gate de rota no FastAPI, o backend continua usando a chave `anon` de sempre pra consultar as tabelas.
+- **Frontend:** `supabase_flutter` adicionado; `main.dart` inicializa o client Supabase (`SUPABASE_URL`/`SUPABASE_ANON_KEY` via `--dart-define`, reaproveitando a MESMA `SUPABASE_URL`/chave que o backend já usa — confirmado antes, decodificando o JWT localmente, que é a chave `anon`, segura pro build Web). Novo `StaffGate` (StreamBuilder sobre `auth.onAuthStateChange`, sem Provider/Riverpod/Bloc) decide entre `LoginScreen` e `HubScreen`; `HubScreen` navega (Navigator 1.0 clássico) pra `PortariaScreen` e a nova `PainelDiaScreen`. `api_service.dart` anexa `Authorization: Bearer <access_token>` da sessão ativa nas 3 chamadas staff-only; nova `NaoAutorizadoException` pra 401.
+- **`flutter build web` validado localmente** com os 3 `--dart-define` (`API_URL`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`) antes de qualquer deploy — compilou limpo, só avisos de lint pré-existentes no resto do projeto (`flutter analyze`, 31 issues, todos `info`/deprecação, nenhum erro).
+- **Acesso ao Supabase ampliado, a pedido do usuário, pra eu conseguir aplicar mudanças de schema e criar contas sem depender de intervenção manual a cada vez:** duas credenciais novas, validadas antes de usar (decodificação local do JWT + uma chamada real de cada uma) e guardadas **só no `.env` local** (nunca em `render.yaml`/Vercel):
+  - `SUPABASE_DB_URL` (connection string direta do Postgres) — usada por um novo `backend/app/aplicar_migration.py`, que roda um arquivo de `sql/migrations/` direto no banco (sem precisar colar no SQL Editor do dashboard).
+  - `SUPABASE_SERVICE_ROLE_KEY` — usada pra criar contas de funcionário via `auth.admin.create_user` (API administrativa do Supabase Auth).
+- **Prática de backup antes de alteração de schema, adotada a pedido do usuário como padrão permanente (não precisa reautorizar a cada vez):** antes de cada `ALTER TABLE` em produção, um dump JSON das tabelas afetadas (`supabase.table(...).select("*")`) salvo fora do repositório. Feito duas vezes nesta sessão, antes de cada uma das duas migrations aplicadas.
+- **Duas migrations aplicadas em produção nesta sessão** (via `aplicar_migration.py`, backup antes de cada uma):
+  1. `20260817_01_add_horario_estimativa_aniversariantes.sql` (nova) — `horario_reserva`/`estimativa_convidados`.
+  2. `20260725_01_add_cpf_aniversariantes.sql` — **achado durante o trabalho:** essa migration já existia no repositório desde 25/07/2026, documentada em `CLAUDE.md` como aplicada, mas a coluna `cpf` simplesmente não existia no banco real (confirmado consultando `information_schema.columns` antes e depois) — ficou só no papel por mais de 3 semanas. Aplicada agora, a pedido explícito do usuário. Continua sem nenhum fluxo real que a popule (mesmo aviso do arquivo original).
+- **Primeira conta de funcionário criada** via `service_role` (`auth.admin.create_user`, `email_confirm=True`) — usando o e-mail já conhecido do usuário como titular do projeto. Senha temporária gerada e comunicada fora do repositório (nunca gravada em nenhum arquivo versionado). **Decisão sobre o fluxo de criação de contas:** para este primeiro momento (MVP), manter a criação manual/via script é suficiente — não existe ainda tela de autoatendimento nem gestão de usuários no app. Avaliado usar CPF ou telefone como identificador de login em vez de e-mail, mas **descartado**: Supabase Auth é nativamente e-mail/telefone, CPF como login exigiria uma camada própria de mapeamento sem ganho real (todo funcionário já tem e-mail funcional). Catalogado como melhoria de Fase 1.5/2 (ver `docs/paparazzi_resumo_projeto.md`): tela de gestão de funcionários dentro do próprio Hub, atrás de um papel "admin", com CPF/telefone entrando só como dado de perfil (auditoria), não como credencial.
+- **Checkpoint de git:** commit local criado antes de aplicar qualquer migration (rastreabilidade caso algo desse errado), seguido do commit/push desta etapa. Nenhum segredo (`.env`) foi commitado — conferido explicitamente antes do `git add`.
+- **Risco de sequenciamento de deploy, sinalizado antes de publicar:** proteger as rotas da Portaria no backend antes do build novo do Vercel (com login) estar publicado quebraria a Portaria em uso real no bar (401 nas chamadas do frontend antigo, que não manda `Authorization`). Backend e frontend desta feature publicados juntos.
+
+#### Arquivos afetados
+
+- `sql/migrations/20260817_01_add_horario_estimativa_aniversariantes.sql` (nova), `sql/schema/01_tables_aniversariantes.sql` (colunas refletidas)
+- `backend/app/routes/webhooks.py` (persistência de horário/estimativa), `backend/app/routes/aniversariantes.py` (`GET /hoje`), `backend/app/routes/convidados.py` (rotas protegidas)
+- `backend/app/services/auth_service.py` (novo), `backend/app/aplicar_migration.py` (novo, ferramenta administrativa)
+- `backend/requirements.txt` (`psycopg2-binary` adicionado)
+- `frontend/pubspec.yaml`/`pubspec.lock` (`supabase_flutter`), `frontend/lib/main.dart`
+- `frontend/lib/views/staff_gate.dart`, `login_screen.dart`, `hub_screen.dart`, `painel_dia_screen.dart` (novos)
+- `frontend/lib/services/api_service.dart`, `frontend/lib/models/aniversariante_model.dart`
+- `frontend/lib/views/portaria_screen.dart` (timer de reset 3s → 7s)
+- `CLAUDE.md` (nova seção 4.7, seção 7 e 7.1 atualizadas), `docs/visao_geral_paparazzi.md` (Passo 5/5.1, Modelagem de Dados), `docs/paparazzi_resumo_projeto.md` (Fase 1 e Fase 2)
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)
@@ -425,11 +459,18 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 ### Validação na Portaria e Integração com ERP (Flutter Mobile/Web + FastAPI + Epoc ERP)
 
 - [x] Endpoint backend para validação do QR Code (`POST /convidados/validar-qr`). **Atualizado (17/08/2026):** item estava marcado como pendente por desatualização do diário — a rota já existe em `convidados.py`, com os três estados (`LIBERADO`/`JA_UTILIZADO`/`INVALIDO`) e detecção de quando o CPF lido é o do próprio aniversariante da lista.
-- [x] Interface simplificada no app da portaria para leitura de QR Code via câmera e busca por CPF/Nome. **Atualizado (17/08/2026):** `portaria_screen.dart` já implementa a leitura via `mobile_scanner` (acessível em `?modo=portaria`) e o modal de busca manual por CPF (`GET /convidados/buscar-cpf/{cpf}`), incluindo card VIP com confete quando o CPF é do próprio aniversariante.
-- [x] Resposta visual instantânea na tela da portaria (Acesso Liberado 🟢 / Negado 🔴). **Atualizado (17/08/2026):** implementado com reset automático de 3s e toque na tela para voltar ao scanner.
-- [ ] Agendamento em fila assíncrona para abertura de comanda na API do Epoc ERP vinculado ao CPF validado. **Sem acesso à API do Epoc até 17/08/2026** — item genuinamente não iniciado (nenhum código toca a tabela `comandas_temporarias` nem faz nenhuma chamada ao Epoc). Único item real pendente desta seção.
+- [x] Interface simplificada no app da portaria para leitura de QR Code via câmera e busca por CPF/Nome. **Atualizado (17/08/2026):** `portaria_screen.dart` já implementa a leitura via `mobile_scanner` e o modal de busca manual por CPF (`GET /convidados/buscar-cpf/{cpf}`), incluindo card VIP com confete quando o CPF é do próprio aniversariante. **Atualizado de novo (18/08/2026):** deixou de ser acessível via `?modo=portaria` público — agora vive dentro do Hub administrativo pós-login (ver checklist nova abaixo).
+- [x] Resposta visual instantânea na tela da portaria (Acesso Liberado 🟢 / Negado 🔴). **Atualizado (17/08/2026):** implementado com reset automático de 3s e toque na tela para voltar ao scanner. **Atualizado (18/08/2026):** tempo do reset automático aumentado de 3s para 7s — no teste real em campo, 3s sumia rápido demais pra dar tempo de ler nome/CPF na tela; toque na tela pra liberar leitura antes continua disponível.
+- [ ] Agendamento em fila assíncrona para abertura de comanda na API do Epoc ERP vinculado ao CPF validado. **Sem acesso à API do Epoc até 18/08/2026** — item genuinamente não iniciado (nenhum código toca a tabela `comandas_temporarias` nem faz nenhuma chamada ao Epoc). Único item real pendente desta seção.
 
 **Nota (17/08/2026):** até este registro, o diário e o `CLAUDE.md` descreviam o formulário do convidado e a portaria como parcialmente pendentes, mas uma auditoria do código-fonte mostrou que ambos já estavam implementados de ponta a ponta (provavelmente concluídos em uma sessão anterior sem o devido registro no diário). Ver Registro [17/08/2026] — Correção de Documentação e Validação com Lead Real para o detalhamento da divergência encontrada e da validação feita.
+
+### Login de Funcionários e Painel de Aniversariantes do Dia (nova, 18/08/2026)
+
+- [x] Login de funcionário via Supabase Auth (e-mail/senha), protegendo Portaria e painel do dia — ver Registro [18/08/2026] abaixo.
+- [x] `GET /aniversariantes/hoje` (staff-only): lista aniversariantes do dia com horário, estimativa e quantidade real confirmada.
+- [x] Persistência de `horario_reserva`/`estimativa_convidados` em `aniversariantes` (antes só usados no flyer e descartados).
+- [ ] Tela de gestão de contas de funcionário dentro do app (hoje é só script administrativo manual) — catalogado como melhoria de Fase 1.5/2, ver `docs/paparazzi_resumo_projeto.md`.
 
 ## 4. Registro de Débitos Técnicos e Decisões de Arquitetura
 
