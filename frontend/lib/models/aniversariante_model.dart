@@ -78,17 +78,31 @@ class AniversarianteHoje {
 // POST /convidados/validar-qr na Portaria -- true quando o convidado já
 // bipou entrada de verdade, não só confirmou presença no formulário.
 class ConvidadoResumo {
+  final String id;
   final String nomeCompleto;
   final String? whatsapp;
   final bool utilizado;
 
-  ConvidadoResumo({required this.nomeCompleto, this.whatsapp, this.utilizado = false});
+  ConvidadoResumo({required this.id, required this.nomeCompleto, this.whatsapp, this.utilizado = false});
 
   factory ConvidadoResumo.fromJson(Map<String, dynamic> json) {
     return ConvidadoResumo(
+      id: json['id'].toString(),
       nomeCompleto: json['nome_completo']?.toString() ?? 'Convidado',
       whatsapp: json['whatsapp']?.toString(),
       utilizado: json['utilizado'] == true,
+    );
+  }
+
+  // Cópia com `utilizado` alterado -- usada pra atualizar a lista na tela
+  // (ConvidadosListaScreen) sem precisar recarregar tudo do backend depois
+  // de confirmar/desfazer uma entrada manual.
+  ConvidadoResumo copyWith({bool? utilizado}) {
+    return ConvidadoResumo(
+      id: id,
+      nomeCompleto: nomeCompleto,
+      whatsapp: whatsapp,
+      utilizado: utilizado ?? this.utilizado,
     );
   }
 }

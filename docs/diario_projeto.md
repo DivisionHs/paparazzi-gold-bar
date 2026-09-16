@@ -535,6 +535,25 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `CLAUDE.md` (seção 4.7 atualizada)
 - `docs/diario_projeto.md` (este registro)
 
+### Registro [16/09/2026] (continuação) — Confirmação Manual de Entrada do Convidado
+
+#### O que foi feito
+
+- **Pedido do usuário:** na lista de convidados de um aniversariante (ex.: "Davi" com o convidado "Jhonatan"), ter um botão pra confirmar a entrada do convidado assim que ele chega — necessário porque o QR Code da Portaria está pausado (ver Registro [15/09/2026]), então não havia mais nenhuma forma de marcar quem entrou de fato; o "já entraram" adicionado mais cedo hoje ficaria sempre em zero.
+- **Backend:** rota nova `PATCH /convidados/{convidado_id}/entrada` (staff-only, `ConfirmarEntradaManualSchema`, corpo `{"utilizado": true|false}`) grava `utilizado`/`data_hora_entrada` na mesma coluna que `POST /validar-qr` já usa — os dois caminhos (QR ou confirmação manual) alimentam a mesma contagem, sem duplicar lógica. `GET /convidados/lista/{lead_id}` passou a devolver também o `id` de cada convidado (precisa dele pra saber qual linha confirmar).
+- **Frontend:** `ConvidadoResumo` ganhou `id` e um `copyWith`, pra atualizar a linha certa na tela sem recarregar a lista inteira. `ConvidadosListaScreen`: convidado sem entrada confirmada mostra um botão "Confirmar entrada"; uma vez confirmado, vira um chip verde "Entrou" tocável — tocar de novo desfaz (`utilizado=false`), cobrindo o caso de confirmar por engano. Um spinner substitui o botão da linha durante a chamada, sem travar o resto da tela.
+- **Validado de ponta a ponta contra o Supabase real** (não só compilação): criado um convidado de teste em produção (`POST /confirmar`, lead fictício `999999999`), rodado o backend localmente contra as mesmas credenciais reais do `.env`, login como funcionário via password grant do Supabase Auth (mesma conta criada em 15/09/2026) pra obter um token de sessão real, e testados os quatro casos — confirmar (`utilizado=true`), desfazer (`utilizado=false`), sem token (401) e id inexistente (404) — todos com o resultado esperado. Convidado de teste removido do Supabase ao final; nenhum dado real foi tocado.
+- **`flutter analyze`** (39 issues, todas info/deprecação pré-existentes) e **`flutter build web`** (build limpo) rodados depois de todas as mudanças.
+
+#### Arquivos afetados
+
+- `backend/app/routes/convidados.py` (`PATCH /{convidado_id}/entrada` novo; `GET /lista/{lead_id}` devolve `id`)
+- `frontend/lib/models/aniversariante_model.dart` (`ConvidadoResumo.id`, `copyWith`)
+- `frontend/lib/services/api_service.dart` (`confirmarEntradaConvidado`)
+- `frontend/lib/views/convidados_lista_screen.dart` (botão "Confirmar entrada" / chip "Entrou")
+- `CLAUDE.md` (seção 4.7 atualizada)
+- `docs/diario_projeto.md` (este registro)
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)

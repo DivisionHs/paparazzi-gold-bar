@@ -28,6 +28,7 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
   _EstadoTela _estado = _EstadoTela.carregando;
   List<ConvidadoResumo> _convidados = [];
   String? _erro;
+  String? _idConfirmando; // id do convidado com a confirmação de entrada em andamento (desabilita o botão dele só)
 
   static const Color colorNight = Color(0xFF090909);
   static const Color colorGraphite = Color(0xFF1F1F1F);
@@ -54,6 +55,33 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
         _erro = erro.toString();
         _estado = _EstadoTela.erro;
       });
+    }
+  }
+
+  // Confirma (ou desfaz, se `convidado.utilizado` já for true) a entrada
+  // direto pelo nome na lista -- pedido do usuário pra dar um jeito de
+  // marcar quem já entrou sem depender do QR Code (pausado enquanto a
+  // integração com o novo ERP é avaliada). Atualiza a linha localmente
+  // (via copyWith) em vez de recarregar a lista inteira do backend.
+  Future<void> _alternarEntrada(ConvidadoResumo convidado) async {
+    final novoValor = !convidado.utilizado;
+    setState(() => _idConfirmando = convidado.id);
+
+    try {
+      await _apiService.confirmarEntradaConvidado(convidado.id, utilizado: novoValor);
+      if (!mounted) return;
+      setState(() {
+        _convidados = _convidados
+            .map((c) => c.id == convidado.id ? c.copyWith(utilizado: novoValor) : c)
+            .toList();
+      });
+    } catch (erro) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(erro.toString()), backgroundColor: Colors.amber[800]),
+      );
+    } finally {
+      if (mounted) setState(() => _idConfirmando = null);
     }
   }
 
@@ -189,8 +217,10 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
   }
 
   Widget _buildLinha(ConvidadoResumo convidado) {
+    final confirmando = _idConfirmando == convidado.id;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: colorGraphite.withOpacity(0.8),
         borderRadius: BorderRadius.circular(12),
@@ -210,10 +240,50 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
               style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
-          if (convidado.utilizado)
-            const Text('entrou', style: TextStyle(color: Colors.greenAccent, fontSize: 11, fontWeight: FontWeight.w600)),
+          const SizedBox(width: 8),
+          _buildBotaoEntrada(convidado, confirmando),
         ],
       ),
+    );
+  }
+
+  // Botão de confirmar entrada (ou chip "Entrou", tocável pra desfazer uma
+  // confirmação feita por engano) -- pedido do usuário: dar um jeito de
+  // marcar a entrada do convidado direto pelo nome, sem QR Code.
+  Widget _buildBotaoEntrada(ConvidadoResumo convidado, bool confirmando) {
+    if (confirmando) {
+      return const SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(strokeWidth: 2, color: colorGold),
+      );
+    }
+
+    if (convidado.utilizado) {
+      return OutlinedButton.icon(
+        onPressed: () => _alternarEntrada(convidado),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.greenAccent,
+          side: const BorderSide(color: Colors.greenAccent),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        icon: const Icon(Icons.check, size: 16),
+        label: const Text('Entrou', style: TextStyle(fontSize: 12)),
+      );
+    }
+
+    return ElevatedButton(
+      onPressed: () => _alternarEntrada(convidado),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: colorGold,
+        foregroundColor: colorNight,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      child: const Text('Confirmar entrada', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
     );
   }
 }

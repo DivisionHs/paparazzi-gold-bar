@@ -234,4 +234,33 @@ class ApiService {
         .map((item) => ConvidadoResumo.fromJson(item as Map<String, dynamic>))
         .toList();
   }
+
+  // Confirma (ou desfaz) a entrada de um convidado direto pelo nome na
+  // lista, sem precisar de QR Code -- necessário enquanto a leitura de QR
+  // na Portaria está pausada (ver ConvidadosListaScreen). Mesma coluna
+  // `utilizado` que POST /validar-qr grava.
+  Future<void> confirmarEntradaConvidado(String convidadoId, {required bool utilizado}) async {
+    final Uri url = Uri.parse('$baseUrl/convidados/$convidadoId/entrada');
+
+    http.Response response;
+    try {
+      response = await http.patch(
+        url,
+        headers: _headersAutenticados,
+        body: jsonEncode({'utilizado': utilizado}),
+      );
+    } catch (_) {
+      throw ApiException('Não foi possível conectar ao servidor.');
+    }
+
+    if (response.statusCode == 401) {
+      throw NaoAutorizadoException();
+    }
+
+    if (response.statusCode != 200) {
+      throw ApiException(
+        utilizado ? 'Não foi possível confirmar a entrada.' : 'Não foi possível desfazer a confirmação.',
+      );
+    }
+  }
 }

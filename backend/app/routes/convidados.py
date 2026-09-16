@@ -30,6 +30,13 @@ class ConfirmarPresencaSchema(BaseModel):
 class ValidarQrSchema(BaseModel):
     qr_code_token: str = Field(..., description="Token UUID v4 lido do QR Code do convidado")
 
+# Modelo Pydantic do payload de confirmação manual de entrada (decisão de
+# 16/09/2026) — usado quando o funcionário confirma a entrada do convidado
+# direto pelo nome na lista, sem precisar bipar QR Code (QR está pausado
+# enquanto a integração com o novo ERP é avaliada, ver CLAUDE.md 3.2).
+class ConfirmarEntradaManualSchema(BaseModel):
+    utilizado: bool = Field(True, description="True confirma a entrada, False desfaz uma confirmação feita por engano")
+
 # 2. Endpoint POST que o formulário chama
 @router.post("/confirmar", status_code=status.HTTP_201_CREATED)
 async def confirmar_presenca(payload: ConfirmarPresencaSchema):
@@ -266,7 +273,7 @@ async def buscar_convidado_por_cpf(cpf: str):
 async def listar_convidados_do_aniversariante(lead_id: str):
     try:
         resposta = supabase.table("convidados")\
-            .select("nome_completo, whatsapp, confirmado_em, utilizado")\
+            .select("id, nome_completo, whatsapp, confirmado_em, utilizado")\
             .eq("lead_id", lead_id)\
             .order("confirmado_em", desc=False)\
             .execute()
@@ -284,12 +291,49 @@ async def listar_convidados_do_aniversariante(lead_id: str):
         "total": len(convidados),
         "convidados": [
             {
+                "id": c["id"],
                 "nome_completo": c["nome_completo"],
                 "whatsapp": c.get("whatsapp"),
                 "utilizado": bool(c.get("utilizado")),
             }
             for c in convidados
         ],
+    }
+
+
+# Confirmação manual de entrada (decisão de 16/09/2026): botão na lista de
+# convidados (ver ConvidadosListaScreen) pra marcar a entrada do convidado
+# direto pelo nome, sem precisar de QR Code — necessário porque a leitura
+# de QR na Portaria está temporariamente pausada (ver CLAUDE.md 3.2), mas o
+# painel ainda precisa de uma forma de contar quem já entrou de verdade.
+# Mesma coluna `utilizado`/`data_hora_entrada` que POST /validar-qr grava —
+# os dois caminhos (QR ou confirmação manual) alimentam a mesma contagem.
+@router.patch("/{convidado_id}/entrada", dependencies=[Depends(obter_funcionario_autenticado)])
+async def confirmar_entrada_manual(convidado_id: str, payload: ConfirmarEntradaManualSchema):
+    data_hora_entrada = datetime.now(timezone.utc).isoformat() if payload.utilizado else None
+
+    try:
+        resposta = supabase.table("convidados")\
+            .update({"utilizado": payload.utilizado, "data_hora_entrada": data_hora_entrada})\
+            .eq("id", convidado_id)\
+            .execute()
+    except Exception as e:
+        print(f"Erro ao confirmar entrada manual do convidado {convidado_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao confirmar a entrada do convidado."
+        )
+
+    if not resposta.data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Convidado não encontrado."
+        )
+
+    return {
+        "id": convidado_id,
+        "utilizado": payload.utilizado,
+        "data_hora_entrada": data_hora_entrada,
     }
 
 
