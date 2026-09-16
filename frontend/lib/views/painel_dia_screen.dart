@@ -23,10 +23,15 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
   _EstadoTela _estado = _EstadoTela.carregando;
   List<AniversarianteHoje> _aniversariantes = [];
   String? _erro;
+  DateTime _dataSelecionada = DateTime.now();
 
   static const Color colorNight = Color(0xFF090909);
   static const Color colorGraphite = Color(0xFF1F1F1F);
   static const Color colorGold = Color(0xFFD4A94F);
+
+  bool get _eHoje => _ehMesmoDia(_dataSelecionada, DateTime.now());
+
+  bool _ehMesmoDia(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
   @override
   void initState() {
@@ -37,7 +42,7 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
   Future<void> _carregar() async {
     setState(() => _estado = _EstadoTela.carregando);
     try {
-      final lista = await _apiService.buscarAniversariantesHoje();
+      final lista = await _apiService.buscarAniversariantesHoje(data: _dataSelecionada);
       if (!mounted) return;
       setState(() {
         _aniversariantes = lista;
@@ -52,6 +57,52 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
     }
   }
 
+  // Abre o seletor de data (pedido do usuário -- ver outros dias, não só
+  // hoje) e recarrega a lista pra data escolhida.
+  Future<void> _escolherData(BuildContext context) async {
+    final DateTime? escolhida = await showDatePicker(
+      context: context,
+      locale: const Locale('pt', 'BR'),
+      initialDate: _dataSelecionada,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        // Mesma paleta escura/dourada do resto do app (ver o mesmo padrão em
+        // register_screen.dart::_selectDate, usado no campo de data de
+        // nascimento do convidado) -- garante que o calendário do
+        // showDatePicker não caia no tema claro padrão do Flutter.
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: colorGold,
+              onPrimary: colorNight,
+              surface: colorGraphite,
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: colorNight,
+          ),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
+    );
+
+    if (escolhida == null || !mounted) return;
+
+    setState(() => _dataSelecionada = escolhida);
+    _carregar();
+  }
+
+  void _irParaHoje() {
+    setState(() => _dataSelecionada = DateTime.now());
+    _carregar();
+  }
+
+  String _formatarTituloData(DateTime data) {
+    final dia = data.day.toString().padLeft(2, '0');
+    final mes = data.month.toString().padLeft(2, '0');
+    return '$dia/$mes/${data.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,9 +110,23 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
       appBar: AppBar(
         backgroundColor: colorNight,
         elevation: 0,
-        title: const Text('Aniversariantes do Dia', style: TextStyle(color: Colors.white, fontSize: 16)),
+        title: Text(
+          _eHoje ? 'Aniversariantes do Dia' : 'Aniversariantes de ${_formatarTituloData(_dataSelecionada)}',
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
         iconTheme: const IconThemeData(color: colorGold),
         actions: [
+          if (!_eHoje)
+            IconButton(
+              icon: const Icon(Icons.today, color: colorGold),
+              tooltip: 'Voltar para hoje',
+              onPressed: _irParaHoje,
+            ),
+          IconButton(
+            icon: const Icon(Icons.calendar_month, color: colorGold),
+            tooltip: 'Escolher outra data',
+            onPressed: () => _escolherData(context),
+          ),
           IconButton(icon: const Icon(Icons.refresh, color: colorGold), onPressed: _carregar),
         ],
       ),
@@ -95,8 +160,14 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
         );
       case _EstadoTela.carregado:
         if (_aniversariantes.isEmpty) {
-          return const Center(
-            child: Text('Nenhum aniversariante com reserva para hoje.', style: TextStyle(color: Colors.white54)),
+          return Center(
+            child: Text(
+              _eHoje
+                  ? 'Nenhum aniversariante com reserva para hoje.'
+                  : 'Nenhum aniversariante com reserva em ${_formatarTituloData(_dataSelecionada)}.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white54),
+            ),
           );
         }
         return RefreshIndicator(
@@ -139,7 +210,11 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
       child: Row(
         children: [
           Expanded(
-            child: _buildResumoItem(Icons.cake_outlined, '$totalAniversariantes', 'aniversariantes hoje'),
+            child: _buildResumoItem(
+              Icons.cake_outlined,
+              '$totalAniversariantes',
+              _eHoje ? 'aniversariantes hoje' : 'aniversariantes no dia',
+            ),
           ),
           Container(width: 1, height: 36, color: colorGold.withOpacity(0.2)),
           Expanded(

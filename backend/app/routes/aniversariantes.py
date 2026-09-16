@@ -2,7 +2,7 @@ import os
 from collections import Counter
 from datetime import date
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from supabase import create_client, Client
 
 from backend.app.services.auth_service import obter_funcionario_autenticado
@@ -53,18 +53,27 @@ async def validar_token_aniversariante(token: str):
     }
 
 
-# Painel operacional (staff-only): lista os aniversariantes com reserva para
-# hoje, com horário/estimativa (Custom Fields do Kommo, persistidos desde a
-# migration 20260817_01) e a quantidade REAL de convidados já confirmados
-# (COUNT em `convidados`, sempre atual — não depende de nada do Kommo).
+# Painel operacional (staff-only): lista os aniversariantes com reserva
+# numa data específica, com horário/estimativa (Custom Fields do Kommo,
+# persistidos desde a migration 20260817_01) e a quantidade REAL de
+# convidados já confirmados (COUNT em `convidados`, sempre atual — não
+# depende de nada do Kommo).
+#
+# Query param `data` opcional (decisão de 16/09/2026 — pedido do usuário
+# pra também conseguir ver aniversariantes de outros dias, não só hoje):
+# formato "AAAA-MM-DD"; sem ele, cai no padrão de sempre (hoje). O nome da
+# rota (`/hoje`) ficou como está por compatibilidade — nenhum client
+# existente precisa mudar pra continuar vendo só o dia de hoje.
 @router.get("/hoje", dependencies=[Depends(obter_funcionario_autenticado)])
-async def listar_aniversariantes_hoje():
-    hoje = date.today().isoformat()
+async def listar_aniversariantes_hoje(
+    data: date | None = Query(None, description="Data no formato AAAA-MM-DD. Padrão: hoje."),
+):
+    data_alvo = (data or date.today()).isoformat()
 
     try:
         resposta = supabase.table("aniversariantes")\
             .select("kommo_lead_id, nome_completo, horario_reserva, estimativa_convidados")\
-            .eq("data_reserva", hoje)\
+            .eq("data_reserva", data_alvo)\
             .execute()
     except Exception as e:
         print(f"Erro ao consultar aniversariantes do dia: {e}")
@@ -100,4 +109,4 @@ async def listar_aniversariantes_hoje():
     ]
     lista.sort(key=lambda a: a["horario_reserva"] or "99:99")
 
-    return {"data": hoje, "total": len(lista), "aniversariantes": lista}
+    return {"data": data_alvo, "total": len(lista), "aniversariantes": lista}

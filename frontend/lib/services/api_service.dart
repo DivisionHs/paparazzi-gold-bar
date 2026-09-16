@@ -34,6 +34,15 @@ class NaoAutorizadoException extends ApiException {
       : super('Sua sessão expirou. Faça login novamente.');
 }
 
+// Formata uma data local como "AAAA-MM-DD", sem depender de fuso/hora --
+// usada só pra montar o query param `data` das rotas que filtram por dia.
+String _formatarDataIso(DateTime data) {
+  final ano = data.year.toString().padLeft(4, '0');
+  final mes = data.month.toString().padLeft(2, '0');
+  final dia = data.day.toString().padLeft(2, '0');
+  return '$ano-$mes-$dia';
+}
+
 class ApiService {
   // URL base da API. Parametrizada via `--dart-define=API_URL=https://sua-api.com`
   // no build/run. Sem a flag, cai no fallback local de desenvolvimento.
@@ -168,10 +177,14 @@ class ApiService {
     throw ApiException(mensagemErro);
   }
 
-  // Painel do dia (staff-only): aniversariantes com reserva para hoje, com
-  // horário/estimativa e a quantidade real de convidados já confirmados.
-  Future<List<AniversarianteHoje>> buscarAniversariantesHoje() async {
-    final Uri url = Uri.parse('$baseUrl/aniversariantes/hoje');
+  // Painel do dia (staff-only): aniversariantes com reserva numa data
+  // específica, com horário/estimativa e a quantidade real de convidados já
+  // confirmados. Sem `data`, o backend cai no padrão de sempre (hoje) --
+  // parâmetro adicionado pra também dar pra ver outros dias, não só hoje.
+  Future<List<AniversarianteHoje>> buscarAniversariantesHoje({DateTime? data}) async {
+    final Uri url = Uri.parse('$baseUrl/aniversariantes/hoje').replace(
+      queryParameters: data != null ? {'data': _formatarDataIso(data)} : null,
+    );
 
     http.Response response;
     try {

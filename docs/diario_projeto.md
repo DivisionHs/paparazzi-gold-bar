@@ -499,6 +499,23 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `CLAUDE.md` (seção 4.2 atualizada)
 - `docs/diario_projeto.md` (este registro)
 
+### Registro [16/09/2026] — Painel do Dia Ganha Filtro por Data (Ver Outros Dias)
+
+#### O que foi feito
+
+- **Pedido do usuário:** no painel de aniversariantes, abaixo do card de Portaria desabilitado (QR pausado), poder ver aniversariantes de outros dias, não só do dia atual. Perguntado via `AskUserQuestion` como preferia navegar entre os dias — seletor de data (calendário) + botão "Hoje", ou uma lista única agrupada por data; escolhida a primeira opção.
+- **Backend:** `GET /aniversariantes/hoje` (`aniversariantes.py`) ganhou um query param opcional `data` (tipo `date`, formato "AAAA-MM-DD"). Sem ele, continua exatamente como antes (filtra por hoje) — o nome da rota não mudou, só o comportamento ficou mais flexível. Resto da lógica (contagem de convidados confirmados, ordenação por horário) inalterado.
+- **Frontend:** `ApiService.buscarAniversariantesHoje` ganhou parâmetro opcional `data` (`DateTime?`), montando o query string quando presente. `PainelDiaScreen` ganhou estado `_dataSelecionada` (padrão: hoje) e um ícone de calendário na AppBar que abre `showDatePicker` (±365 dias, tema escuro/dourado igual ao resto do app); um segundo ícone ("hoje") aparece só quando a data selecionada não é a atual, pra voltar rápido sem precisar abrir o calendário de novo. Título da tela, o rótulo do card de resumo ("aniversariantes hoje" vs. "aniversariantes no dia") e a mensagem de lista vazia se adaptam à data selecionada.
+- **Validado:** `flutter analyze` (38 issues, todas info/deprecação pré-existentes) e `flutter build web` (build limpo) depois das mudanças. `py_compile` no backend sem erro.
+
+#### Arquivos afetados
+
+- `backend/app/routes/aniversariantes.py` (`GET /hoje` aceita `data` opcional)
+- `frontend/lib/services/api_service.dart` (`buscarAniversariantesHoje` aceita `data`, novo helper `_formatarDataIso`)
+- `frontend/lib/views/painel_dia_screen.dart` (seletor de data, botão "hoje", título/resumo/mensagens adaptados)
+- `CLAUDE.md` (seção 4.7 atualizada)
+- `docs/diario_projeto.md` (este registro)
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)
