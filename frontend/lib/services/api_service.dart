@@ -194,4 +194,31 @@ class ApiService {
         .map((item) => AniversarianteHoje.fromJson(item as Map<String, dynamic>))
         .toList();
   }
+
+  // Lista de convidados confirmados de um aniversariante específico
+  // (staff-only), aberta ao tocar no nome dele no painel do dia.
+  Future<List<ConvidadoResumo>> buscarConvidadosDoAniversariante(String leadId) async {
+    final Uri url = Uri.parse('$baseUrl/convidados/lista/$leadId');
+
+    http.Response response;
+    try {
+      response = await http.get(url, headers: _headersAutenticados);
+    } catch (_) {
+      throw ApiException('Não foi possível conectar ao servidor.');
+    }
+
+    if (response.statusCode == 401) {
+      throw NaoAutorizadoException();
+    }
+
+    if (response.statusCode != 200) {
+      throw ApiException('Não foi possível carregar os convidados desta lista.');
+    }
+
+    final corpo = jsonDecode(response.body) as Map<String, dynamic>;
+    final lista = corpo['convidados'] as List<dynamic>? ?? [];
+    return lista
+        .map((item) => ConvidadoResumo.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
 }

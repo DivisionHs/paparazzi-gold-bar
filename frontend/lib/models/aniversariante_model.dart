@@ -63,3 +63,20 @@ class AniversarianteHoje {
     );
   }
 }
+
+// Uma linha da lista de convidados de um aniversariante (GET
+// /convidados/lista/{lead_id}, rota staff-only), aberta ao tocar no nome do
+// aniversariante no painel do dia.
+class ConvidadoResumo {
+  final String nomeCompleto;
+  final String? whatsapp;
+
+  ConvidadoResumo({required this.nomeCompleto, this.whatsapp});
+
+  factory ConvidadoResumo.fromJson(Map<String, dynamic> json) {
+    return ConvidadoResumo(
+      nomeCompleto: json['nome_completo']?.toString() ?? 'Convidado',
+      whatsapp: json['whatsapp']?.toString(),
+    );
+  }
+}

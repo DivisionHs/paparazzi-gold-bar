@@ -255,6 +255,37 @@ async def buscar_convidado_por_cpf(cpf: str):
     }
 
 
+# Lista os nomes dos convidados confirmados de um aniversariante específico
+# (staff-only) — usada pelo painel de aniversariantes do dia quando o
+# funcionário toca no nome de um aniversariante, pra ver quem já confirmou
+# presença naquela lista.
+@router.get("/lista/{lead_id}", dependencies=[Depends(obter_funcionario_autenticado)])
+async def listar_convidados_do_aniversariante(lead_id: str):
+    try:
+        resposta = supabase.table("convidados")\
+            .select("nome_completo, whatsapp, confirmado_em")\
+            .eq("lead_id", lead_id)\
+            .order("confirmado_em", desc=False)\
+            .execute()
+    except Exception as e:
+        print(f"Erro ao listar convidados do aniversariante {lead_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao listar os convidados desta lista."
+        )
+
+    convidados = resposta.data or []
+
+    return {
+        "lead_id": lead_id,
+        "total": len(convidados),
+        "convidados": [
+            {"nome_completo": c["nome_completo"], "whatsapp": c.get("whatsapp")}
+            for c in convidados
+        ],
+    }
+
+
 @router.get("/resumo/{lead_id}")
 async def obter_resumo_aniversariante(lead_id: str):
     try:

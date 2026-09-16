@@ -34,6 +34,7 @@ por causa disso.
 
 import io
 import logging
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -143,22 +144,43 @@ def formatar_data_exibicao(data_reserva: str | None) -> str:
         return ""
 
 
+_PADRAO_HORARIO = re.compile(r"(\d{1,2})\s*(?:[:h\.]\s*(\d{1,2}))?", re.IGNORECASE)
+
+
 def formatar_horario_exibicao(horario: str | None) -> str:
     """
     Converte o valor bruto do Custom Field "Horário da reserva" (ID
-    2068854) para o formato "HH:00" usado no cartão da arte.
+    2068854, tipo texto livre) para o formato "HH:MM" usado no cartão da
+    arte e persistido em `aniversariantes.horario_reserva` (ver
+    CLAUDE.md 4.2).
 
-    O Kommo tem devolvido esse campo como só a hora, sem minutos (ex.:
-    valor bruto "12" para meio-dia) — se vier só dígitos, formata como
-    hora cheia. Se já vier num formato com separador (ex. "18:30"),
-    devolve como está.
+    Esse campo é preenchido em texto livre pelo próprio cliente no chat do
+    Salesbot (não é um seletor com opções fixas), então o valor bruto varia
+    bastante: só a hora ("21"), com separador ("21:00", "21.00"), por
+    extenso ("21 horas", "21h", "21 hr") ou até sem separador nenhum
+    ("2100"). A regex extrai o primeiro número de 1-2 dígitos como hora e,
+    se houver um separador (":", "h" ou ".") logo em seguida seguido de
+    outro número, usa esse segundo número como minuto; caso contrário,
+    assume hora cheia (minuto "00"). Se a extração resultar numa hora/minuto
+    fora do intervalo válido (0-23 / 0-59), ou se não houver nenhum dígito
+    no valor recebido, devolve o valor original sem alteração, em vez de
+    arriscar um horário errado.
     """
     if not horario:
         return ""
     valor = horario.strip()
-    if valor.isdigit():
-        return f"{int(valor):02d}:00"
-    return valor
+
+    match = _PADRAO_HORARIO.search(valor)
+    if not match:
+        return valor
+
+    hora = int(match.group(1))
+    minuto = int(match.group(2)) if match.group(2) else 0
+
+    if not (0 <= hora <= 23) or not (0 <= minuto <= 59):
+        return valor
+
+    return f"{hora:02d}:{minuto:02d}"
 
 
 def generate_flyer(
