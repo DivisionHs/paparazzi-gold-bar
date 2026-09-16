@@ -7,8 +7,8 @@ O documento deve começar explicando de forma simples a jornada da informação 
 - O **Kommo CRM** captura a foto e os dados da reserva via WhatsApp.
 - O **FastAPI (Backend Central)** recebe o webhook, processa a foto com a moldura dourada, salva no banco e gera a URL única com token seguro.
 - O **Supabase (PostgreSQL e Storage)** armazena a foto, os dados do aniversariante e os cadastros dos convidados.
-- O **Flutter Web (Vercel)** exibe o formulário para os convidados confirmarem presença e gera o QR Code individual — este lado continua público, sem login.
-- O **App de Portaria (Flutter)**, desde 18/08/2026, vive atrás de um login de funcionário (Supabase Auth) — bipa o QR Code do convidado, aciona em segundo plano a API do Epoc ERP para abertura da comanda, e divide o mesmo "Hub" pós-login com o painel de aniversariantes do dia.
+- O **Flutter Web (Vercel)** exibe o formulário para os convidados confirmarem presença — este lado continua público, sem login. A geração/exibição do QR Code individual está **pausada desde 15/09/2026** (a Paparazzi trocou de ERP recentemente; a integração fica em avaliação antes de reativar), mas o backend continua gerando o `qr_code_token` normalmente por trás.
+- O **App de Portaria (Flutter)**, desde 18/08/2026, vive atrás de um login de funcionário (Supabase Auth) e divide o mesmo "Hub" pós-login com o painel de aniversariantes do dia. A leitura de QR Code está **temporariamente fora do ar** (mesma decisão de 15/09/2026) — o card da Portaria no Hub abre um aviso em vez da tela real. A integração com o Epoc ERP pra abertura automática de comanda **nunca chegou a ser implementada** (bloqueada por falta de acesso à API do ERP antigo, e agora também pela troca de ERP). Enquanto isso, a confirmação de entrada é feita manualmente: um botão "Confirmar entrada" na lista de convidados do painel do dia (ver Passo 5.1), adicionado em 16/09/2026.
 
 ## 2. Fluxo Operacional Passo a Passo (Jornada da Fase 1)
 
@@ -34,28 +34,25 @@ Ao receber o payload consolidado com os 5 campos preenchidos, o backend baixa a 
 
 ### Passo 3 - Devolução e Compartilhamento
 
-O backend devolve para o Kommo a imagem do flyer pronta e o link personalizado da lista.  
+O backend devolve ao Kommo, via Custom Fields do Lead (lidos pelo Salesbot com merge tags), a URL do flyer pronto (`2069404`) e o link personalizado da lista (`2073759`, formato `https://paparazzi-gold-bar.vercel.app/?token=<UUID>` — corrigido em 15/09/2026, o formato anterior com `/cadastro` nunca funcionou de verdade, ver `docs/diario_projeto.md`).  
 O aniversariante divulga o flyer e envia o link no grupo de convidados.
 
-### Passo 4 - Cadastro do Convidado e Emissão do QR Code (Flutter Web)
+### Passo 4 - Cadastro do Convidado (Flutter Web)
 
 O convidado acessa o link, visualiza o nome e foto do aniversariante e preenche **Nome**, **CPF**, **WhatsApp** e **Data de Nascimento**.  
-O sistema valida se o CPF já está na lista e gera na tela um QR Code individual com o passaporte do evento.
+O sistema valida se o CPF já está na lista e confirma a presença na tela. **Desde 15/09/2026, não gera mais QR Code na tela** (emissão pausada até a integração com o novo ERP da Paparazzi ser avaliada) — o backend continua gravando `qr_code_token` no registro do convidado por trás, só não é mostrado.
 
-### Passo 5 - Checagem Expressa na Portaria (App Portaria)
+### Passo 5 - Checagem na Portaria (App Portaria) — temporariamente fora do ar
 
-**Desde 18/08/2026, o funcionário precisa estar logado** (Supabase Auth, e-mail/senha) para acessar a Portaria — o login abre um Hub administrativo, de onde se acessa tanto a Portaria quanto o painel de aniversariantes do dia (ver Passo 5.1). O fluxo de leitura em si não muda: na chegada ao bar, o convidado apresenta o QR Code, o porteiro faz a leitura com a câmera e a tela responde instantaneamente com:
+**Desde 18/08/2026, o funcionário precisa estar logado** (Supabase Auth, e-mail/senha) para acessar o Hub administrativo. **Desde 15/09/2026, a leitura de QR Code na Portaria está pausada** (card do Hub abre um aviso "Temporariamente fora do ar" em vez da tela real) — a lógica de leitura (câmera, os três estados de resultado, busca manual por CPF) continua implementada no código, só desligada da navegação, pronta pra reativar quando o QR voltar. Comportamento normal, quando reativado: o porteiro lê o QR Code do convidado e a tela responde com Sinal Verde 🟢 (Acesso Liberado) ou Sinal Vermelho 🔴 (QR Code inválido ou já utilizado).
 
-- Sinal Verde 🟢 (Acesso Liberado), ou
-- Sinal Vermelho 🔴 (QR Code inválido ou já utilizado).
+### Passo 5.1 - Painel de Aniversariantes do Dia e Confirmação Manual de Entrada (Hub, staff-only)
 
-### Passo 5.1 - Painel de Aniversariantes do Dia (Hub, staff-only)
+Mesmo Hub pós-login: uma tela lista os aniversariantes com reserva num dia — nome, horário da reserva, estimativa de convidados (vindos do Kommo, persistidos no Supabase) e a quantidade real de convidados já confirmados pelo formulário. **Desde 16/09/2026**, um ícone de calendário permite escolher qualquer data, não só o dia atual (com atalho pra voltar rápido pra "hoje"). Ao tocar no nome de um aniversariante, abre a lista com os convidados confirmados — mostrando, lado a lado, quantos confirmaram presença pelo formulário e quantos **já entraram de fato**. Como o QR Code está pausado (Passo 5), a entrada é confirmada manualmente: cada convidado tem um botão "Confirmar entrada" (vira um chip "Entrou", tocável pra desfazer em caso de engano) — grava exatamente a mesma marcação que o QR Code gravaria, então quando o QR voltar, os dois caminhos continuam alimentando a mesma contagem.
 
-Mesmo Hub pós-login da Portaria: uma tela lista os aniversariantes com reserva para o dia — nome, horário da reserva, estimativa de convidados (ambos vindos do Kommo, persistidos no Supabase desde 18/08/2026) e a quantidade real de convidados já confirmados (contada ao vivo na tabela de convidados). Serve pra equipe ter uma visão rápida do movimento esperado sem precisar consultar o Kommo diretamente.
+### Passo 6 - Integração com Comanda (Epoc ERP) — planejado, não implementado
 
-### Passo 6 - Integração com Comanda (Epoc ERP)
-
-No momento em que o porteiro valida a entrada, o sistema marca o cliente como presente e enfileira a chamada para abrir a comanda correspondente no Epoc ERP.
+O plano original era, no momento em que a entrada fosse validada (QR Code ou, hoje, confirmação manual), o sistema enfileirar a chamada para abrir a comanda correspondente no ERP. **Nunca foi implementado** — segue bloqueado por falta de acesso à API oficial do ERP (agora um ERP novo, trocado recentemente pela Paparazzi; o antigo Epoc nunca chegou a ter acesso liberado). A tabela `comandas_temporarias` já existe no schema (fila com `status_epoc` pra re-tentativas), esperando essa integração.
 
 ## 3. Modelagem de Dados no Supabase
 
@@ -80,9 +77,9 @@ Desde 18/08/2026, o acesso da equipe (Portaria, painel de aniversariantes do dia
 - Identificador do convidado.
 - Vínculo com a reserva do aniversariante.
 - Nome completo, CPF, WhatsApp e Data de Nascimento.
-- Token individual do QR Code (UUID v4).
-- Status da entrada (PENDENTE ou ENTROU).
-- Data e hora exata do check-in na portaria.
+- Token individual do QR Code (UUID v4) — continua sendo gerado no cadastro mesmo com a emissão/exibição de QR Code pausada (ver Passo 4).
+- Status da entrada (PENDENTE ou ENTROU) — marcado tanto pela leitura de QR Code na Portaria (pausada) quanto pela confirmação manual no painel do dia (ativa desde 16/09/2026, ver Passo 5.1); os dois caminhos gravam a mesma coluna.
+- Data e hora exata da entrada, seja qual for o caminho usado.
 
 ## 4. Estratégia de Resiliência e Contingência Operacional
 

@@ -554,6 +554,16 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `CLAUDE.md` (seção 4.7 atualizada)
 - `docs/diario_projeto.md` (este registro)
 
+### Registro [16/09/2026] (fechamento) — Fase 1 Encerrada
+
+**Comunicado pelo usuário:** a partir deste registro, a Fase 1 do MVP fica considerada **fechada**. Qualquer trabalho novo relatado pelo usuário nas próximas sessões deve ser tratado, por padrão, como **correção/ajuste desta mesma fase** — não como escopo de Fase 2 — a menos que o usuário sinalize explicitamente o contrário.
+
+**Estado real da Fase 1 neste fechamento** (ver `docs/paparazzi_resumo_projeto.md` e `docs/visao_geral_paparazzi.md`, ambos atualizados nesta data para refletir isto):
+- ✅ Captura via CRM, geração de flyer, link exclusivo, formulário do convidado, login de funcionários e painel de aniversariantes do dia (com filtro de data) — todos funcionando, validados em produção.
+- ⏸️ QR Code (emissão ao convidado e leitura na Portaria) — **pausado** desde 15/09/2026, aguardando avaliação da API do novo ERP da Paparazzi. Confirmação de entrada roda hoje via botão manual no painel do dia.
+- ❌ Integração automática com o ERP para abertura de comanda — **nunca foi implementada**, segue bloqueada por falta de acesso à API (antes Epoc, agora um ERP novo). É o único item da Fase 1 original genuinamente não iniciado.
+- 📝 Mapeamento do fluxo do chatbot pra pedir CPF/telefone/data de nascimento de aniversariantes (não só convidados) e de reservas de mesa convencional — ainda não feito, catalogado em `docs/paparazzi_resumo_projeto.md` (Fase 2).
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)
