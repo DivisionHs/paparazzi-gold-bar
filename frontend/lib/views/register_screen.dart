@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import '../models/guest_model.dart';
 import '../models/aniversariante_model.dart';
 import '../services/api_service.dart';
@@ -29,7 +28,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   _EstadoTela _estadoTela = _EstadoTela.carregando;
   Aniversariante? _aniversariante;
-  String? _qrCodeToken;
   bool _isSubmitting = false;
 
   static const Color colorNight = Color(0xFF090909);
@@ -152,7 +150,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         birthday: _birthdayController.text,
       );
 
-      final resultado = await _apiService.confirmarPresenca(
+      // O QR Code individual (resultado.qrCodeToken) continua sendo gerado
+      // pelo backend, mas não é mais exibido aqui (ver _buildPassaporteVip).
+      await _apiService.confirmarPresenca(
         novoConvidado,
         _aniversariante!.leadId,
       );
@@ -161,7 +161,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       setState(() {
         _isSubmitting = false;
-        _qrCodeToken = resultado.qrCodeToken;
         _estadoTela = _EstadoTela.sucesso;
       });
     } catch (erro) {
@@ -607,8 +606,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // Passaporte VIP: tela final exibida após a confirmação de presença, com o
-  // QR Code individual do convidado (qr_code_token real vindo do backend).
+  // Tela final exibida após a confirmação de presença. QR Code retirado
+  // temporariamente (decisão de 15/09/2026): a Paparazzi trocou de ERP
+  // recentemente, e a emissão de QR Code para aniversariantes/convidados só
+  // volta depois de avaliada a API/integração do novo sistema. O backend
+  // continua gerando e devolvendo `qr_code_token` normalmente (ver
+  // `_qrCodeToken`) — só a exibição ao convidado foi removida daqui, pra ser
+  // trivial reativar depois.
   Widget _buildPassaporteVip() {
     final nomeConvidado = _nameController.text;
 
@@ -634,37 +638,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Tudo pronto, $nomeConvidado! Este é o seu passaporte VIP para a Paparazzi Gold Bar.',
+            'Tudo pronto, $nomeConvidado! Você já está confirmado na lista de aniversário da Paparazzi Gold Bar.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.grey[400],
               fontSize: 14,
               height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: colorGold.withOpacity(0.2),
-                  blurRadius: 15,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: SizedBox(
-              width: 180,
-              height: 180,
-              child: QrImageView(
-                data: _qrCodeToken ?? '',
-                version: QrVersions.auto,
-                size: 180.0,
-                gapless: false,
-              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -677,11 +656,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.camera_alt_outlined, color: colorGold, size: 20),
+                const Icon(Icons.badge_outlined, color: colorGold, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Tire um print desta tela e apresente na portaria para agilizar sua entrada.',
+                    'Na entrada, basta informar seu nome ou CPF na portaria.',
                     style: TextStyle(color: Colors.grey[300], fontSize: 12, height: 1.3),
                   ),
                 ),

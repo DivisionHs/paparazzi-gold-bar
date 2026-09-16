@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'portaria_screen.dart';
+import 'em_desenvolvimento_screen.dart';
 import 'painel_dia_screen.dart';
 
 // Hub administrativo pós-login: ponto de entrada único de tudo que é
@@ -52,10 +52,12 @@ class HubScreen extends StatelessWidget {
               _CardHub(
                 icone: Icons.qr_code_scanner,
                 titulo: 'Portaria Expressa',
-                subtitulo: 'Ler QR Code ou buscar convidado por CPF',
+                subtitulo: 'Temporariamente fora do ar — em desenvolvimento',
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const PortariaScreen()),
+                  MaterialPageRoute(
+                    builder: (_) => const EmDesenvolvimentoScreen(titulo: 'Portaria Expressa'),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
