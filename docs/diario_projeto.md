@@ -440,6 +440,65 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `vercel_build.sh` (novo, raiz do repo — build do Flutter Web pro Vercel)
 - `CLAUDE.md` (nova seção 4.7, seção 7 e 7.1 atualizadas), `docs/visao_geral_paparazzi.md` (Passo 5/5.1, Modelagem de Dados), `docs/paparazzi_resumo_projeto.md` (Fase 1 e Fase 2)
 
+### Registro [15/09/2026] — Validação Pós-Hiato de 1 Mês + Link do Formulário no Custom Field 2073759
+
+#### O que foi feito
+
+- **Contexto:** o usuário reativou o Supabase após ~1 mês sem uso do projeto e pediu uma validação de ponta a ponta antes de continuar. Feita só com chamadas `GET`/leitura (sem lead novo, sem acesso ao Kommo Salesbot no momento): Supabase (REST direto), backend em produção (Render, `/health` e `/aniversariantes/validar-token/{token}` contra um lead real), frontend em produção (Vercel), e o token de longa duração do Kommo (`GET /api/v4/account` e `GET /api/v4/leads/{id}`). Tudo respondeu `200` — nenhuma credencial expirou, nenhum serviço ficou fora do ar durante a pausa.
+- **Webhook validado com segurança, sem lead novo:** simulado o sinal do webhook (`POST /webhooks/kommo`) contra um lead já processado (idempotência intercepta antes de qualquer escrita) — confirmado o filtro de etapa (`status_id` errado é ignorado sincronamente) e o ACK imediato (`status_id` correto agenda o processamento em background). Reconsulta do registro depois do teste confirmou que nada foi sobrescrito.
+- **Bug real encontrado ao montar o link do formulário para o usuário:** o link documentado/hardcoded até então (`.../cadastro?token=...`) não existe de fato — `frontend/lib/main.dart` não tem router, só lê `Uri.base.queryParameters['token']` na raiz do site. Path `/cadastro` (com ou sem `#` de hash routing) sempre caiu em 404 ou abriu o `StaffGate` (tela de login/portaria) em vez do formulário, porque o `token` nunca chegava até o Dart. Descoberto testando diretamente contra produção (`curl`) até achar o formato que responde 200 e entrega o token: `https://paparazzi-gold-bar.vercel.app/?token=<UUID>`.
+- **Custom Field "Link do Formulário" religado, no ID novo:** o campo antigo (`2069406`, citado nos registros de 10/08) nunca foi escrito; o usuário criou um campo novo (tipo `url`, ID `2073759`) e pediu para o backend passar a gravá-lo. Implementado em `webhooks.py::finalizar_cadastro_aniversariante` — mesma chamada de `kommo_service.atualizar_custom_fields_lead` que já gravava a URL do flyer (`2069404`), agora também grava `CAMPO_LINK_FORMULARIO_ID` (`2073759`) com o link corrigido (`URL_BASE_FORMULARIO`, `https://paparazzi-gold-bar.vercel.app`). Validado com uma escrita real (`PATCH`) e leitura de volta (`GET`) no Custom Field de um lead de teste real (`54393614`, "Ricardo") — o Kommo devolveu o valor exatamente como gravado.
+- **Reset de senha/criação de conta de funcionário:** também criada, a pedido do usuário, uma nova conta de funcionário via `service_role`/`auth.admin.create_user` (e-mail `paparazzigoldbar@gmail.com`, `email_confirm=True`) — senha comunicada fora do repositório, mesma prática já registrada no Registro [18/08/2026].
+
+#### Arquivos afetados
+
+- `backend/app/routes/webhooks.py` (`CAMPO_LINK_FORMULARIO_ID`/`URL_BASE_FORMULARIO` novos, link do formulário corrigido, escrita no Custom Field `2073759`)
+- `CLAUDE.md` (seção 4.2 atualizada)
+- `docs/diario_projeto.md` (este registro)
+
+### Registro [15/09/2026] (continuação) — Pausa do QR Code (troca de ERP) + Resumo/Drill-down no Painel do Dia
+
+#### O que foi feito
+
+- **Contexto do usuário:** a Paparazzi trocou de sistema de ERP recentemente. Antes de reativar QR Code para aniversariantes e convidados, o negócio quer avaliar a API/integração do novo ERP (ver seção 6 — Débitos Técnicos, item sobre Epoc). Até lá, o QR Code sai de circulação nos dois lugares onde aparecia para o usuário final: o formulário do convidado e o app da portaria.
+- **QR Code retirado do formulário do convidado:** `register_screen.dart::_buildPassaporteVip` não exibe mais `QrImageView` — a tela de sucesso agora só confirma a presença em texto, com uma dica simples ("informe seu nome ou CPF na portaria"). O backend (`POST /convidados/confirmar`) continua gerando e devolvendo `qr_code_token` normalmente (nada mudou no banco/API) — só a exibição no Flutter foi removida, e o campo `_qrCodeToken`/import do `qr_flutter` foram removidos do arquivo por não terem mais uso (fácil de trazer de volta quando a decisão for revertida).
+- **Portaria (QR Code) desligada do Hub:** em vez de apagar `portaria_screen.dart` (mobile_scanner, busca por CPF, os 3 estados de validação), o card "Portaria Expressa" no `hub_screen.dart` passou a abrir uma tela nova e genérica, `em_desenvolvimento_screen.dart` ("Temporariamente fora do ar / Em desenvolvimento"). Reversível trocando uma linha (`onTap`) quando a Portaria voltar a ser usada.
+- **Painel de Aniversariantes do Dia — resumo + drill-down (pedido do usuário):**
+  - **Resumo no topo:** novo card fixo no início da lista (`_buildResumo` em `painel_dia_screen.dart`) mostrando dois números simples: quantidade de aniversariantes de hoje (`_aniversariantes.length`, direto da tabela `aniversariantes`) e a soma dos convidados **estimados** de todos eles — essa segunda métrica é a soma de `estimativa_convidados`, campo que já vem do CRM (Custom Field "Estimativa de Convidados", `2068456`), não uma contagem de confirmações reais no Supabase (essa continua existindo, mas só no nível de cada card individual, como já era).
+  - **Drill-down por aniversariante:** cada card da lista virou tocável (`InkWell`) — ao tocar, abre `ConvidadosListaScreen` (nova), que lista os nomes reais dos convidados já confirmados daquele aniversariante. Isso exigiu um endpoint novo no backend, `GET /convidados/lista/{lead_id}` (staff-only, mesma proteção `obter_funcionario_autenticado` das outras rotas da Portaria/painel), que devolve `nome_completo`/`whatsapp` de cada convidado da lista — não existia nenhuma rota que devolvesse os nomes antes (só contagem, em `/aniversariantes/hoje`, ou métricas agregadas, em `/convidados/resumo/{lead_id}`).
+- **Validado localmente:** `flutter analyze` (35 issues, todas info/deprecação pré-existentes do mesmo tipo já tolerado no projeto, nenhum erro) e `flutter build web` (build limpo) rodados depois de todas as mudanças acima. Backend (`webhooks.py`, `convidados.py`) compilado com `py_compile`, sem erro de sintaxe. Nenhum deploy feito ainda — mudanças só no repositório local, aguardando autorização do usuário para commit/push.
+
+#### Arquivos afetados
+
+- `frontend/lib/views/register_screen.dart` (QR Code removido da tela de sucesso, import `qr_flutter` removido)
+- `frontend/lib/views/hub_screen.dart` (card "Portaria Expressa" aponta para o placeholder)
+- `frontend/lib/views/em_desenvolvimento_screen.dart` (novo — placeholder genérico "temporariamente fora do ar")
+- `frontend/lib/views/painel_dia_screen.dart` (resumo no topo + cards tocáveis)
+- `frontend/lib/views/convidados_lista_screen.dart` (novo — lista de nomes dos convidados de um aniversariante)
+- `frontend/lib/models/aniversariante_model.dart` (novo model `ConvidadoResumo`)
+- `frontend/lib/services/api_service.dart` (`buscarConvidadosDoAniversariante`)
+- `backend/app/routes/convidados.py` (`GET /convidados/lista/{lead_id}`, novo)
+- `CLAUDE.md` (seção 3.2 atualizada — QR pausado, rota do formulário corrigida)
+- `docs/diario_projeto.md` (este registro + checklist da seção 3 atualizado)
+
+### Registro [15/09/2026] (continuação 2) — Formatação Robusta do Horário + Cabeçalho na Lista de Convidados
+
+#### O que foi feito
+
+- **Correção de ID apontada pelo usuário:** o pedido citava o Custom Field `2068456` como a origem dos valores de horário em formato livre ("21 horas", "21:00", "21 hr"). Conferido direto na API do Kommo (`GET /leads/custom_fields/2068456`): esse ID continua sendo **"Estimativa de Convidados"** (tipo `numeric`), sem mudança. O campo de texto livre do horário é o **`2068854`** ("Horário da Reserva", tipo `text`) — já era o campo lido por `buscar_custom_fields_lead`/`finalizar_cadastro_aniversariante` para essa finalidade (ver CLAUDE.md 4.2). Ajuste aplicado no campo correto; nenhuma mudança feita em `2068456`.
+- **`flyer_generator.formatar_horario_exibicao()` reescrita:** antes só tratava dois casos (só dígitos → "HH:00"; qualquer outra coisa → devolvido sem alteração, o que incluía os formatos livres citados pelo usuário sem normalizar). Nova versão usa uma regex (`(\d{1,2})\s*(?:[:h\.]\s*(\d{1,2}))?`) que extrai hora e, se houver separador (`:`, `h` ou `.`) seguido de outro número, o minuto — cobrindo "21", "21:00", "21 horas", "21h", "21hr", "21h30", "2100" (military time sem separador), "21.30" etc., todos normalizados para "HH:MM". Se não houver nenhum dígito no valor (ex. "meia noite") ou o número extraído cair fora do intervalo válido, devolve o valor original em vez de arriscar um horário errado. Testado manualmente com os exemplos do usuário + variações antes de aplicar (ver CLAUDE.md 4.2).
+- **Efeito em cascata, sem nenhuma mudança adicional de código:** essa função já era chamada tanto na geração do flyer quanto em `finalizar_cadastro_aniversariante` antes de persistir `aniversariantes.horario_reserva` — ou seja, o card do painel do dia (`a.horarioReserva`) já vai passar a receber o valor corretamente formatado a partir do próximo lead processado pelo webhook, sem precisar tocar em `painel_dia_screen.dart`.
+- **Cabeçalho novo na lista de convidados (pedido do usuário — nome + horário + quantidade juntos):** `ConvidadosListaScreen` ganhou um parâmetro `horarioReserva` (passado por `painel_dia_screen.dart` a partir de `AniversarianteHoje.horarioReserva`) e um card de cabeçalho (`_buildCabecalho`) acima da lista de nomes, mostrando nome do aniversariante + "Reserva às HH:MM" + quantidade de convidados confirmados (contada a partir da própria lista carregada, `_convidados.length` — sempre em sincronia com o que é exibido embaixo, sem depender de um número separado vindo de outra fonte).
+- **Validado localmente:** `flutter analyze` (38 issues, todas info/deprecação pré-existentes, nenhum erro) e `flutter build web` (build limpo) depois de todas as mudanças. `py_compile` no backend sem erro. Nenhum deploy feito ainda.
+
+#### Arquivos afetados
+
+- `backend/app/services/flyer_generator.py` (`formatar_horario_exibicao` reescrita com regex)
+- `frontend/lib/views/convidados_lista_screen.dart` (parâmetro `horarioReserva` + cabeçalho novo)
+- `frontend/lib/views/painel_dia_screen.dart` (passa `horarioReserva` ao navegar)
+- `CLAUDE.md` (seção 4.2 atualizada)
+- `docs/diario_projeto.md` (este registro)
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)
@@ -448,7 +507,7 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - [ ] Configuração do disparo do webhook no Salesbot do Kommo CRM.
 - [x] Desenvolvimento do gerador de flyer em Python (Pillow) — recorte da foto, faixa com o nome do aniversariante, cartão de dia da semana/data/horário reais sobrepostos na arte, seleção automática de moldura pelo dia da semana, fonte com suporte a acentos (Playfair Display Bold).
 - [x] Upload automático da foto do flyer gerado para o Supabase Storage.
-- [ ] Devolução da imagem e do link da lista exclusiva (UUID v4) para a conversa do WhatsApp no Kommo CRM. **Parcial (10/08/2026):** backend já grava a URL do flyer no Custom Field "URL do Flyer" (`2069404`) via `kommo_service.atualizar_custom_fields_lead`; falta o ajuste manual do Salesbot (referenciar `{{lead.cf.2069404}}` no lugar do texto hardcoded do step 166) e a gravação do Custom Field "Link do Formulário" (`2069406`, aguardando o ajuste do domínio para `app-paparazzi.vercel.app`).
+- [x] Devolução da imagem e do link da lista exclusiva (UUID v4) para a conversa do WhatsApp no Kommo CRM. **Atualizado (15/09/2026):** backend grava a URL do flyer (Custom Field `2069404`) e o link do formulário, já corrigido (Custom Field "Link do Formulário", novo ID `2073759`, `https://paparazzi-gold-bar.vercel.app/?token=<UUID>`), via `kommo_service.atualizar_custom_fields_lead` — validado com escrita+leitura reais num lead de teste. Falta só o ajuste manual do Salesbot (referenciar `{{lead.cf.2069404}}`/`{{lead.cf.2073759}}` no lugar do texto hardcoded do step 166), fora do escopo de código.
 - [x] Leitura dos 5 Custom Fields obrigatórios (Data da reserva `2068460`, Horário `2068854`, Estimativa de convidados `2068456`, Nome do flyer `2068452`, Foto `2068458`) via consulta ativa (`GET` direto na API do Kommo, `kommo_service.buscar_custom_fields_lead`) — o webhook em si só sinaliza `lead_id`/`status_id`.
 - [x] Processamento direto ao chegar na etapa "PROCESSANDO FLYER" (`status_id` `109983139`): geração do flyer + INSERT em `aniversariantes` em `finalizar_cadastro_aniversariante()`.
 - [x] Etapa exclusiva "PROCESSANDO FLYER" (`109983139`) criada no pipeline do Kommo e Salesbot ajustado para só mover o Lead para lá com os 5 campos completos — backend alinhado (`KOMMO_TARGET_STATUS_ID`).
@@ -460,12 +519,12 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 
 - [x] Exibição dos dados e foto do aniversariante a partir do token da URL (`register_screen.dart`, prioriza `foto_perfil_url`, com fallback para `foto_url`).
 - [x] Coleta dos dados do convidado (Nome, CPF com validação de dígito verificador, WhatsApp, Data de Nascimento), com máscaras e validação client-side.
-- [x] Exibição da tela de confirmação com a geração do QR Code individual (UUID v4). **Atualizado (17/08/2026):** item estava marcado como pendente por desatualização do diário — a tela "Passaporte VIP" (`_buildPassaporteVip`) com `qr_flutter` já existe no código e foi validada nesta data (ver Registro [17/08/2026] abaixo): o backend gera um `qr_code_token` diferente a cada confirmação (`gen_random_uuid()` no Postgres), confirmado consultando registros reais em `convidados`.
+- [x] Exibição da tela de confirmação com a geração do QR Code individual (UUID v4). **Atualizado (17/08/2026):** item estava marcado como pendente por desatualização do diário — a tela "Passaporte VIP" (`_buildPassaporteVip`) com `qr_flutter` já existe no código e foi validada nesta data (ver Registro [17/08/2026] abaixo): o backend gera um `qr_code_token` diferente a cada confirmação (`gen_random_uuid()` no Postgres), confirmado consultando registros reais em `convidados`. **Pausado (15/09/2026):** exibição do QR Code removida da tela de confirmação — troca de ERP na Paparazzi exige reavaliar a integração antes de reativar (ver Registro [15/09/2026]). O backend continua gerando `qr_code_token` normalmente.
 
 ### Validação na Portaria e Integração com ERP (Flutter Mobile/Web + FastAPI + Epoc ERP)
 
 - [x] Endpoint backend para validação do QR Code (`POST /convidados/validar-qr`). **Atualizado (17/08/2026):** item estava marcado como pendente por desatualização do diário — a rota já existe em `convidados.py`, com os três estados (`LIBERADO`/`JA_UTILIZADO`/`INVALIDO`) e detecção de quando o CPF lido é o do próprio aniversariante da lista.
-- [x] Interface simplificada no app da portaria para leitura de QR Code via câmera e busca por CPF/Nome. **Atualizado (17/08/2026):** `portaria_screen.dart` já implementa a leitura via `mobile_scanner` e o modal de busca manual por CPF (`GET /convidados/buscar-cpf/{cpf}`), incluindo card VIP com confete quando o CPF é do próprio aniversariante. **Atualizado de novo (18/08/2026):** deixou de ser acessível via `?modo=portaria` público — agora vive dentro do Hub administrativo pós-login (ver checklist nova abaixo).
+- [x] Interface simplificada no app da portaria para leitura de QR Code via câmera e busca por CPF/Nome. **Atualizado (17/08/2026):** `portaria_screen.dart` já implementa a leitura via `mobile_scanner` e o modal de busca manual por CPF (`GET /convidados/buscar-cpf/{cpf}`), incluindo card VIP com confete quando o CPF é do próprio aniversariante. **Atualizado de novo (18/08/2026):** deixou de ser acessível via `?modo=portaria` público — agora vive dentro do Hub administrativo pós-login (ver checklist nova abaixo). **Pausado (15/09/2026):** card "Portaria Expressa" no Hub agora abre um placeholder ("Temporariamente fora do ar/Em desenvolvimento") em vez da tela real — mesma pausa do QR Code acima, ligada à troca de ERP. `portaria_screen.dart` continua intacto no código, só desligado da navegação.
 - [x] Resposta visual instantânea na tela da portaria (Acesso Liberado 🟢 / Negado 🔴). **Atualizado (17/08/2026):** implementado com reset automático de 3s e toque na tela para voltar ao scanner. **Atualizado (18/08/2026):** tempo do reset automático aumentado de 3s para 7s — no teste real em campo, 3s sumia rápido demais pra dar tempo de ler nome/CPF na tela; toque na tela pra liberar leitura antes continua disponível.
 - [ ] Agendamento em fila assíncrona para abertura de comanda na API do Epoc ERP vinculado ao CPF validado. **Sem acesso à API do Epoc até 18/08/2026** — item genuinamente não iniciado (nenhum código toca a tabela `comandas_temporarias` nem faz nenhuma chamada ao Epoc). Único item real pendente desta seção.
 
