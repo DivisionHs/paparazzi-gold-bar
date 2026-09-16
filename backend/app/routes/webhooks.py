@@ -60,11 +60,19 @@ CAMPO_FOTO_ID = "2068458"
 # flyer de volta no Lead depois de gerá-lo, para que o Salesbot consiga
 # mostrar esse link ao cliente via merge tag (`{{lead.cf.2069404}}`) numa
 # mensagem/botão — validado empiricamente que a leitura de Custom Field por
-# ID numérico funciona nesta conta (ver CLAUDE.md 4.2). "Link do Formulário"
-# (2069406) já existe no Kommo mas ainda não é escrito por aqui — o domínio
-# do formulário de convidados (app-paparazzi.vercel.app) ainda vai passar
-# por ajustes numa etapa futura.
+# ID numérico funciona nesta conta (ver CLAUDE.md 4.2).
 CAMPO_URL_FLYER_ID = "2069404"
+
+# "Link do Formulário" (decisão de 15/09/2026): campo novo (tipo `url`),
+# substitui o antigo 2069406 (nunca chegou a ser escrito). Recebe o link
+# público do formulário do convidado, para o Salesbot mostrar ao cliente via
+# `{{lead.cf.2073759}}`.
+CAMPO_LINK_FORMULARIO_ID = "2073759"
+
+# Domínio real do frontend (Vercel). O app não usa rotas nomeadas — main.dart
+# lê o token direto de Uri.base.queryParameters['token'] na raiz do site, por
+# isso o link é sempre "/?token=...", nunca "/cadastro?token=..." nem com "#".
+URL_BASE_FORMULARIO = "https://paparazzi-gold-bar.vercel.app"
 
 # Nomes amigáveis dos 5 campos obrigatórios, usados nos logs de diagnóstico e
 # na checagem de coleta completa. A ordem aqui é só para leitura humana nos
@@ -231,23 +239,29 @@ async def finalizar_cadastro_aniversariante(
             detail="Erro ao registrar o aniversariante no banco de dados."
         )
 
-    link_formulario = f"https://paparazzigoldbar.com.br/cadastro?token={token_unico}"
+    link_formulario = f"{URL_BASE_FORMULARIO}/?token={token_unico}"
     logger.info(f"🔗 Link gerado para o cliente preencher: {link_formulario}")
 
-    # Devolve a URL do flyer ao Kommo assim que o cadastro já está salvo no
-    # Supabase (fonte da verdade primeiro) — o Salesbot referencia esse
-    # Custom Field via merge tag para mostrar o link ao cliente. Best-effort:
-    # se o Kommo recusar/falhar, só loga — não desfaz nada do que já foi
-    # salvo, e a próxima reentrega do webhook não vai regravar isso porque a
-    # checagem de idempotência em processar_lead_confirmado já ignora leads
-    # que já têm registro em aniversariantes.
+    # Devolve a URL do flyer e o link do formulário ao Kommo assim que o
+    # cadastro já está salvo no Supabase (fonte da verdade primeiro) — o
+    # Salesbot referencia os dois Custom Fields via merge tag para mostrar ao
+    # cliente. Best-effort: se o Kommo recusar/falhar, só loga — não desfaz
+    # nada do que já foi salvo, e a próxima reentrega do webhook não vai
+    # regravar isso porque a checagem de idempotência em
+    # processar_lead_confirmado já ignora leads que já têm registro em
+    # aniversariantes.
     gravou_no_kommo = await kommo_service.atualizar_custom_fields_lead(
-        str(lead_id), {CAMPO_URL_FLYER_ID: url_publica_flyer}
+        str(lead_id),
+        {
+            CAMPO_URL_FLYER_ID: url_publica_flyer,
+            CAMPO_LINK_FORMULARIO_ID: link_formulario,
+        },
     )
     if not gravou_no_kommo:
         logger.error(
-            f"💥 Falha ao gravar a URL do flyer no Custom Field 'URL do Flyer' ({CAMPO_URL_FLYER_ID}) "
-            f"do Lead {lead_id}. O Salesbot não vai ter esse valor disponível até isso ser corrigido manualmente."
+            f"💥 Falha ao gravar a URL do flyer ({CAMPO_URL_FLYER_ID}) e/ou o link do formulário "
+            f"({CAMPO_LINK_FORMULARIO_ID}) do Lead {lead_id}. O Salesbot não vai ter esses valores "
+            f"disponíveis até isso ser corrigido manualmente."
         )
 
     logger.info(f"✅ Cadastro do aniversariante '{nome_aniversariante}' foi CONCLUÍDO!")
