@@ -1,3 +1,11 @@
+// O Postgres devolve colunas TIME como "HH:MM:SS" (ex.: "19:00:00"), mesmo
+// quando o backend gravou só "HH:MM" -- corta os segundos pra exibição,
+// sem quebrar se o valor já vier curto ou em outro formato inesperado.
+String? _formatarHoraCurta(String? valor) {
+  if (valor == null || valor.isEmpty) return null;
+  return valor.length >= 5 ? valor.substring(0, 5) : valor;
+}
+
 // Dados do aniversariante retornados pelo handshake de token, feito em
 // GET /aniversariantes/validar-token/{token} assim que a tela é aberta.
 class Aniversariante {
@@ -57,7 +65,7 @@ class AniversarianteHoje {
     return AniversarianteHoje(
       leadId: json['lead_id'].toString(),
       nomeCompleto: json['nome_completo']?.toString() ?? 'Aniversariante',
-      horarioReserva: json['horario_reserva']?.toString(),
+      horarioReserva: _formatarHoraCurta(json['horario_reserva']?.toString()),
       estimativaConvidados: json['estimativa_convidados'] as int?,
       quantidadeConfirmada: json['quantidade_confirmada'] as int? ?? 0,
     );
@@ -66,17 +74,21 @@ class AniversarianteHoje {
 
 // Uma linha da lista de convidados de um aniversariante (GET
 // /convidados/lista/{lead_id}, rota staff-only), aberta ao tocar no nome do
-// aniversariante no painel do dia.
+// aniversariante no painel do dia. `utilizado` é a mesma coluna marcada por
+// POST /convidados/validar-qr na Portaria -- true quando o convidado já
+// bipou entrada de verdade, não só confirmou presença no formulário.
 class ConvidadoResumo {
   final String nomeCompleto;
   final String? whatsapp;
+  final bool utilizado;
 
-  ConvidadoResumo({required this.nomeCompleto, this.whatsapp});
+  ConvidadoResumo({required this.nomeCompleto, this.whatsapp, this.utilizado = false});
 
   factory ConvidadoResumo.fromJson(Map<String, dynamic> json) {
     return ConvidadoResumo(
       nomeCompleto: json['nome_completo']?.toString() ?? 'Convidado',
       whatsapp: json['whatsapp']?.toString(),
+      utilizado: json['utilizado'] == true,
     );
   }
 }

@@ -129,10 +129,14 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
   }
 
   // Cabeçalho com nome do aniversariante, horário da reserva (já formatado
-  // "HH:MM" pelo backend, ver flyer_generator.formatar_horario_exibicao) e a
-  // quantidade de convidados confirmados — tudo junto, como pedido pelo
-  // usuário, pra não precisar voltar ao painel pra conferir o horário.
+  // "HH:MM", ver _formatarHoraCurta em aniversariante_model.dart) e duas
+  // contagens lado a lado: quantos confirmaram presença pelo formulário
+  // (_convidados.length, como já existia) e quantos já entraram de fato
+  // (convidados com `utilizado=true`, mesma coluna marcada na Portaria) —
+  // pedido do usuário pra distinguir as duas coisas.
   Widget _buildCabecalho() {
+    final totalEntraram = _convidados.where((c) => c.utilizado).length;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
       padding: const EdgeInsets.all(16),
@@ -141,39 +145,44 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: colorGold.withOpacity(0.25)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.nomeAniversariante,
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  widget.horarioReserva != null && widget.horarioReserva!.isNotEmpty
-                      ? 'Reserva às ${widget.horarioReserva}'
-                      : 'Horário não informado',
-                  style: const TextStyle(color: Colors.white60, fontSize: 13),
-                ),
-              ],
-            ),
+          Text(
+            widget.nomeAniversariante,
+            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: colorGold.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Text('${_convidados.length}', style: const TextStyle(color: colorGold, fontWeight: FontWeight.bold, fontSize: 16)),
-                const Text('convidados', style: TextStyle(color: Colors.white60, fontSize: 10)),
-              ],
-            ),
+          const SizedBox(height: 4),
+          Text(
+            widget.horarioReserva != null && widget.horarioReserva!.isNotEmpty
+                ? 'Reserva às ${widget.horarioReserva}'
+                : 'Horário não informado',
+            style: const TextStyle(color: Colors.white60, fontSize: 13),
           ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(child: _buildEstatistica('${_convidados.length}', 'confirmados\n(formulário)')),
+              const SizedBox(width: 10),
+              Expanded(child: _buildEstatistica('$totalEntraram', 'já\nentraram')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEstatistica(String valor, String legenda) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: colorGold.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Text(valor, style: const TextStyle(color: colorGold, fontWeight: FontWeight.bold, fontSize: 18)),
+          Text(legenda, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white60, fontSize: 10, height: 1.2)),
         ],
       ),
     );
@@ -189,7 +198,11 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.person_outline, color: colorGold, size: 20),
+          Icon(
+            convidado.utilizado ? Icons.check_circle : Icons.person_outline,
+            color: convidado.utilizado ? Colors.greenAccent : colorGold,
+            size: 20,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -197,6 +210,8 @@ class _ConvidadosListaScreenState extends State<ConvidadosListaScreen> {
               style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
+          if (convidado.utilizado)
+            const Text('entrou', style: TextStyle(color: Colors.greenAccent, fontSize: 11, fontWeight: FontWeight.w600)),
         ],
       ),
     );

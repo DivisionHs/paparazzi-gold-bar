@@ -258,12 +258,15 @@ async def buscar_convidado_por_cpf(cpf: str):
 # Lista os nomes dos convidados confirmados de um aniversariante específico
 # (staff-only) — usada pelo painel de aniversariantes do dia quando o
 # funcionário toca no nome de um aniversariante, pra ver quem já confirmou
-# presença naquela lista.
+# presença naquela lista. Também devolve `utilizado` por convidado (mesma
+# coluna marcada por POST /convidados/validar-qr na Portaria) — decisão de
+# 16/09/2026: o usuário pediu pra ver, além do total confirmado no
+# formulário, quantos já entraram de fato.
 @router.get("/lista/{lead_id}", dependencies=[Depends(obter_funcionario_autenticado)])
 async def listar_convidados_do_aniversariante(lead_id: str):
     try:
         resposta = supabase.table("convidados")\
-            .select("nome_completo, whatsapp, confirmado_em")\
+            .select("nome_completo, whatsapp, confirmado_em, utilizado")\
             .eq("lead_id", lead_id)\
             .order("confirmado_em", desc=False)\
             .execute()
@@ -280,7 +283,11 @@ async def listar_convidados_do_aniversariante(lead_id: str):
         "lead_id": lead_id,
         "total": len(convidados),
         "convidados": [
-            {"nome_completo": c["nome_completo"], "whatsapp": c.get("whatsapp")}
+            {
+                "nome_completo": c["nome_completo"],
+                "whatsapp": c.get("whatsapp"),
+                "utilizado": bool(c.get("utilizado")),
+            }
             for c in convidados
         ],
     }

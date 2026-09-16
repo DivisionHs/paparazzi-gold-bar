@@ -516,6 +516,25 @@ Este arquivo registra o histórico contínuo de desenvolvimento, refatorações,
 - `CLAUDE.md` (seção 4.7 atualizada)
 - `docs/diario_projeto.md` (este registro)
 
+### Registro [16/09/2026] (continuação) — Título Cortando, Horário com Segundos e Contagem de Quem Já Entrou
+
+#### O que foi feito
+
+- **Reportado pelo usuário com print real** do painel após escolher outra data: o título "Aniversariantes de DD/MM/AAAA" cortava em "..." na AppBar (espaço disputado com os 3 ícones de ação) e o horário nos cards aparecia como "19:00:00" em vez de "19:00".
+- **Título cortando:** `painel_dia_screen.dart` ganhou `_formatarDataCurta` (DD/MM, sem ano) usada só no título da AppBar, dentro de um `FittedBox(fit: BoxFit.scaleDown)` como rede de segurança adicional pra nunca mais cortar em nenhuma largura de tela. A versão completa (DD/MM/AAAA, `_formatarTituloData`) continua sendo usada na mensagem de lista vazia, onde tem espaço sobrando.
+- **Horário com segundos:** causa raiz é o tipo `TIME` da coluna `horario_reserva` no Postgres — o PostgREST sempre serializa como "HH:MM:SS", mesmo quando o backend grava só "HH:MM". Corrigido num único lugar (`AniversarianteHoje.fromJson`, `aniversariante_model.dart`, novo helper `_formatarHoraCurta`) cortando pra 5 caracteres na leitura — resolve tanto o badge do card no painel quanto o cabeçalho da lista de convidados, sem precisar tocar nas duas telas.
+- **Quantidade que já entrou (pedido novo do usuário):** `GET /convidados/lista/{lead_id}` passou a devolver `utilizado` por convidado (mesma coluna marcada por `POST /convidados/validar-qr` na Portaria). `ConvidadosListaScreen` agora mostra duas estatísticas lado a lado no cabeçalho — "confirmados (formulário)" e "já entraram" — e cada linha da lista ganhou um ícone verde + rótulo "entrou" pros convidados que já bipuram entrada.
+- **Validado:** `flutter analyze` (39 issues, todas info/deprecação pré-existentes) e `flutter build web` (build limpo) depois de todas as mudanças; `py_compile` no backend sem erro.
+
+#### Arquivos afetados
+
+- `frontend/lib/views/painel_dia_screen.dart` (título curto + `FittedBox`)
+- `frontend/lib/models/aniversariante_model.dart` (`_formatarHoraCurta`, campo `utilizado` em `ConvidadoResumo`)
+- `frontend/lib/views/convidados_lista_screen.dart` (cabeçalho com duas estatísticas, indicador por linha)
+- `backend/app/routes/convidados.py` (`GET /lista/{lead_id}` devolve `utilizado`)
+- `CLAUDE.md` (seção 4.7 atualizada)
+- `docs/diario_projeto.md` (este registro)
+
 ## 3. Checklist de Entregas da Fase 1 (Meta: 24/07/2026)
 
 ### Automação de Flyer e Atendimento (Kommo + FastAPI)

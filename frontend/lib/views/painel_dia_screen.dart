@@ -97,10 +97,21 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
     _carregar();
   }
 
+  // Data completa (DD/MM/AAAA) -- usada só em textos de corpo, onde tem
+  // espaço sobrando (ex.: mensagem de lista vazia).
   String _formatarTituloData(DateTime data) {
     final dia = data.day.toString().padLeft(2, '0');
     final mes = data.month.toString().padLeft(2, '0');
     return '$dia/$mes/${data.year}';
+  }
+
+  // Data curta (DD/MM, sem ano) -- usada no título da AppBar, que divide
+  // espaço com até 3 ícones de ação; a versão com ano/"Aniversariantes de"
+  // estourava a largura em telas de celular e cortava em "...".
+  String _formatarDataCurta(DateTime data) {
+    final dia = data.day.toString().padLeft(2, '0');
+    final mes = data.month.toString().padLeft(2, '0');
+    return '$dia/$mes';
   }
 
   @override
@@ -110,9 +121,13 @@ class _PainelDiaScreenState extends State<PainelDiaScreen> {
       appBar: AppBar(
         backgroundColor: colorNight,
         elevation: 0,
-        title: Text(
-          _eHoje ? 'Aniversariantes do Dia' : 'Aniversariantes de ${_formatarTituloData(_dataSelecionada)}',
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            _eHoje ? 'Aniversariantes do Dia' : 'Aniversariantes — ${_formatarDataCurta(_dataSelecionada)}',
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
         ),
         iconTheme: const IconThemeData(color: colorGold),
         actions: [
