@@ -14,3 +14,16 @@ frontend/.pub-cache/
 .idea/
 .vscode/
 desktop.ini
+
+# Documentação interna (decisões de negócio, IDs internos, precificação) —
+# o repositório é público no GitHub; esses arquivos continuam existindo
+# localmente e sendo lidos normalmente (inclusive pelo Claude Code), só não
+# são mais versionados/publicados (decisão de 23/09/2026).
+CLAUDE.md
+docs/
+
+# Exports do Salesbot (Kommo) — contêm texto de negócio (preços, endereço,
+# programação), mesma decisão acima. Sempre foram salvos na raiz do repo até
+# agora, então ignora só .json na raiz (não afeta frontend/web/manifest.json
+# nem nenhum outro .json versionado dentro de subpastas).
+/*.json
