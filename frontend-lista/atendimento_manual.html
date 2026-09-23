@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atendimento Manual | Paparazzi Gold Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              night: '#090909',
+              graphite: '#1f1f1f',
+              gold: '#d4a94f',
+              softGold: '#f1d38e'
+            },
+            boxShadow: {
+              glow: '0 0 30px rgba(212, 169, 79, 0.25)'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        background:
+          radial-gradient(circle at top, rgba(212, 169, 79, 0.18), transparent 30%),
+          linear-gradient(135deg, #090909, #111111 50%, #1b1b1b);
+      }
+      /* Rótulo (<label>) não tem borda por padrão — a cor precisa vir do
+         texto mesmo. Já nos <input> (que já têm "border" do Tailwind), a
+         border-color colorida fica visível de verdade. */
+      label.campo-ok { color: #4ade80 !important; }
+      label.campo-faltando { color: #f87171 !important; }
+      input.campo-ok, #areaColarFoto.campo-ok { border-color: #4ade80 !important; }
+      input.campo-faltando, #areaColarFoto.campo-faltando { border-color: #f87171 !important; }
+    </style>
+  </head>
+  <body class="min-h-screen text-white">
+    <main class="mx-auto max-w-2xl p-4 sm:p-8">
+      <h1 class="text-2xl font-bold text-softGold">🧑‍💼 Atendimento Manual — Paparazzi</h1>
+      <p class="mt-1 text-sm text-white/60">
+        Ferramenta temporária pra fechar o cadastro de leads que travaram no Salesbot.
+        Preencha só o que estiver faltando — o que já existe no Lead do Kommo é reaproveitado.
+      </p>
+
+      <!-- Config -->
+      <section class="mt-6 rounded-2xl border border-white/10 bg-black/40 p-4">
+        <label class="block text-xs uppercase tracking-wide text-white/50">URL da API</label>
+        <input id="apiUrl" type="text" value="https://paparazzi-api.onrender.com"
+          class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+
+        <label class="mt-3 block text-xs uppercase tracking-wide text-white/50">Token de acesso (ADMIN_MANUAL_TOKEN)</label>
+        <input id="adminToken" type="password"
+          class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+      </section>
+
+      <!-- Busca -->
+      <section class="mt-4 rounded-2xl border border-gold/30 bg-black/40 p-4">
+        <label class="block text-xs uppercase tracking-wide text-white/50">ID do Lead (Kommo)</label>
+        <div class="mt-1 flex gap-2">
+          <input id="leadId" type="text" placeholder="ex: 51343366"
+            class="w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+          <button onclick="buscarCampos()"
+            class="shrink-0 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black hover:bg-softGold">
+            Buscar
+          </button>
+        </div>
+        <p id="buscaStatus" class="mt-2 text-xs text-white/50"></p>
+      </section>
+
+      <!-- Colar mensagem do cliente -->
+      <section class="mt-4 rounded-2xl border border-white/10 bg-black/40 p-4">
+        <label class="block text-xs uppercase tracking-wide text-white/50">
+          Colar mensagem do cliente (preenche nome/data/horário/quantidade automaticamente)
+        </label>
+        <textarea id="mensagemCliente" rows="4" placeholder="Cole aqui a mensagem que o cliente mandou (com ou sem rótulos: &quot;Nome: Willian...&quot; ou só &quot;Willian / 27/09 Domingo / 20 pessoas / 12h&quot;)"
+          class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm"></textarea>
+        <button type="button" onclick="preencherComMensagem()"
+          class="mt-2 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black hover:bg-softGold">
+          ✨ Preencher campos com essa mensagem
+        </button>
+        <p id="interpretarStatus" class="mt-2 text-xs text-white/50"></p>
+      </section>
+
+      <!-- Formulário -->
+      <form id="formGerar" autocomplete="off" class="mt-4 space-y-3 rounded-2xl border border-white/10 bg-black/40 p-4" onsubmit="gerarFlyer(event)">
+        <div>
+          <label id="labelNome" class="block text-xs uppercase tracking-wide text-white/50">Nome (pro flyer)</label>
+          <input id="nome" name="nome" type="text"
+            class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+        </div>
+        <div>
+          <label id="labelData" class="block text-xs uppercase tracking-wide text-white/50">Data da reserva</label>
+          <input id="data_reserva" name="data_reserva" type="text" placeholder="DD/MM/AAAA" maxlength="10"
+            oninput="aplicarMascaraData(this)"
+            class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+        </div>
+        <div>
+          <label id="labelHorario" class="block text-xs uppercase tracking-wide text-white/50">Horário</label>
+          <input id="horario" name="horario" type="text" placeholder="ex: 21:00"
+            class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+        </div>
+        <div>
+          <label id="labelEstimativa" class="block text-xs uppercase tracking-wide text-white/50">Estimativa de convidados</label>
+          <input id="estimativa_convidados" name="estimativa_convidados" type="number"
+            class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+        </div>
+        <div>
+          <label id="labelFoto" class="block text-xs uppercase tracking-wide text-white/50">
+            Foto (só se o cliente não mandou pelo bot — senão deixe em branco)
+          </label>
+          <input id="foto" name="foto" type="file" accept="image/*"
+            class="mt-1 w-full rounded-lg border border-white/20 bg-black/50 p-2 text-sm" />
+          <div id="areaColarFoto" tabindex="0"
+            class="mt-2 flex cursor-text items-center gap-3 rounded-lg border border-dashed border-white/20 bg-black/30 p-3 text-xs text-white/50 focus:border-gold">
+            <span>📋 Ou clique aqui e cole com <kbd class="rounded bg-white/10 px-1">Ctrl+V</kbd> uma imagem copiada (ex.: do chat do Kommo)</span>
+          </div>
+          <div id="previewFoto" class="mt-2 hidden items-center gap-2 text-xs text-softGold">
+            <img id="previewFotoImg" class="h-14 w-14 rounded-lg object-cover" />
+            <span>Imagem colada com sucesso ✅</span>
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full rounded-lg bg-gold py-3 text-sm font-bold text-black hover:bg-softGold">
+          🎨 Gerar flyer e mensagem
+        </button>
+        <p id="gerarStatus" class="text-xs text-white/50"></p>
+      </form>
+
+      <!-- Resultado -->
+      <section id="resultado" class="mt-4 hidden rounded-2xl border border-gold/40 bg-black/40 p-4">
+        <h2 class="text-sm font-semibold text-softGold">✅ Mensagem pronta — copie e cole no chat do cliente</h2>
+        <textarea id="mensagemPronta" readonly rows="14"
+          class="mt-2 w-full rounded-lg border border-white/20 bg-black/60 p-3 text-sm"></textarea>
+        <button onclick="copiarMensagem()"
+          class="mt-2 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black hover:bg-softGold">
+          📋 Copiar mensagem
+        </button>
+      </section>
+    </main>
+
+    <script>
+      function configurarColarFoto() {
+        const area = document.getElementById('areaColarFoto');
+        const inputFoto = document.getElementById('foto');
+        const preview = document.getElementById('previewFoto');
+        const previewImg = document.getElementById('previewFotoImg');
+
+        function tratarPaste(ev) {
+          const itens = (ev.clipboardData || window.clipboardData).items;
+          for (const item of itens) {
+            if (item.type.startsWith('image/')) {
+              const arquivo = item.getAsFile();
+              // <input type="file"> não aceita atribuição direta de File — o
+              // truque padrão é montar um DataTransfer e usar .files dele.
+              const dt = new DataTransfer();
+              dt.items.add(new File([arquivo], `colada-clipboard.${item.type.split('/')[1] || 'png'}`, { type: item.type }));
+              inputFoto.files = dt.files;
+
+              previewImg.src = URL.createObjectURL(arquivo);
+              preview.classList.remove('hidden');
+              preview.classList.add('flex');
+              ev.preventDefault();
+              return;
+            }
+          }
+        }
+
+        area.addEventListener('paste', tratarPaste);
+        // Cola em qualquer lugar da página também funciona, contanto que o
+        // atendente não esteja com foco num campo de texto (nome/data/etc.).
+        document.addEventListener('paste', (ev) => {
+          const ativo = document.activeElement;
+          const emCampoDeTexto = ativo && (ativo.tagName === 'INPUT' || ativo.tagName === 'TEXTAREA') && ativo.id !== 'foto';
+          if (!emCampoDeTexto) tratarPaste(ev);
+        });
+      }
+      document.addEventListener('DOMContentLoaded', configurarColarFoto);
+
+      // Interpreta uma mensagem colada do cliente (com rótulos tipo "Nome:
+      // Willian" ou solta, linha por linha: "Willian" / "27/09 Domingo" /
+      // "20 pessoas" / "12h") e tenta extrair os 4 campos que dá pra
+      // preencher a partir de texto (foto não, obviamente). Heurística por
+      // regex, não IA — propositalmente simples pra essa ferramenta
+      // temporária; o que não for reconhecido fica em branco pro atendente
+      // preencher/conferir manualmente.
+      function interpretarMensagemCliente(texto) {
+        const linhas = texto.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const resultado = { nome: null, data: null, horario: null, estimativa: null };
+
+        const rotulos = [
+          { campo: 'nome', re: /^nome\s*:?\s*(.+)$/i },
+          { campo: 'data', re: /^data(?:\s+da\s+comemora[cç][aã]o)?\s*:?\s*(.+)$/i },
+          { campo: 'horario', re: /^hor[aá]rio\s*:?\s*(.+)$/i },
+          { campo: 'estimativa', re: /^(?:quantidade(?:\s+de\s+pessoas)?|pessoas|convidados)\s*:?\s*(.+)$/i },
+        ];
+
+        const linhasRestantes = [];
+        for (const linha of linhas) {
+          let usada = false;
+          for (const { campo, re } of rotulos) {
+            const m = linha.match(re);
+            if (m && !resultado[campo]) {
+              resultado[campo] = m[1].trim();
+              usada = true;
+              break;
+            }
+          }
+          if (!usada) linhasRestantes.push(linha);
+        }
+
+        const reDataSolta = /\b(\d{1,2})[\/\.\-](\d{1,2})(?:[\/\.\-](\d{2,4}))?\b/;
+        const rePessoas = /(\d{1,3})\s*(?:pessoas|convidados|pax)\b/i;
+        const reHoraSolta = /\b(\d{1,2})(?:[:.](\d{2})|\s*h(?:s|oras)?\b)/i;
+        const reSoNumero = /^(\d{1,3})$/;
+
+        for (const linha of linhasRestantes) {
+          if (!resultado.data && reDataSolta.test(linha)) { resultado.data = linha.match(reDataSolta)[0]; continue; }
+          if (!resultado.estimativa && rePessoas.test(linha)) { resultado.estimativa = linha.match(rePessoas)[1]; continue; }
+          if (!resultado.horario && reHoraSolta.test(linha)) { resultado.horario = linha; continue; }
+          if (!resultado.estimativa && reSoNumero.test(linha)) { resultado.estimativa = linha.match(reSoNumero)[1]; continue; }
+          if (!resultado.nome) { resultado.nome = linha; }
+        }
+
+        // Normaliza estimativa pro caso de ter vindo com rótulo ("20 pessoas")
+        if (resultado.estimativa) {
+          const m = resultado.estimativa.match(/(\d+)/);
+          resultado.estimativa = m ? m[1] : null;
+        }
+
+        // Normaliza data: ignora o dia da semana escrito junto ("Domingo"),
+        // assume o ano atual se não vier, e empurra pro ano seguinte se a
+        // data já passou — reserva é sempre no futuro.
+        if (resultado.data) {
+          const m = resultado.data.match(reDataSolta);
+          if (m) {
+            let [, dia, mes, ano] = m;
+            dia = dia.padStart(2, '0');
+            mes = mes.padStart(2, '0');
+            const hoje = new Date();
+            if (!ano) {
+              ano = String(hoje.getFullYear());
+              const candidata = new Date(Number(ano), Number(mes) - 1, Number(dia));
+              const hojeSemHora = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+              if (candidata < hojeSemHora) ano = String(hoje.getFullYear() + 1);
+            } else if (ano.length === 2) {
+              ano = '20' + ano;
+            }
+            resultado.data = `${dia}/${mes}/${ano}`;
+          } else {
+            resultado.data = null;
+          }
+        }
+
+        return resultado;
+      }
+
+      function preencherComMensagem() {
+        const texto = document.getElementById('mensagemCliente').value;
+        const statusEl = document.getElementById('interpretarStatus');
+        if (!texto.trim()) { statusEl.textContent = 'Cole a mensagem do cliente primeiro.'; return; }
+
+        const r = interpretarMensagemCliente(texto);
+        const preenchidos = [];
+        const naoAchados = [];
+
+        const campos = [
+          ['nome', 'nome', r.nome],
+          ['data', 'data_reserva', r.data],
+          ['horário', 'horario', r.horario],
+          ['quantidade de convidados', 'estimativa_convidados', r.estimativa],
+        ];
+        for (const [rotulo, inputId, valor] of campos) {
+          if (valor) {
+            document.getElementById(inputId).value = valor;
+            preenchidos.push(rotulo);
+          } else {
+            naoAchados.push(rotulo);
+          }
+        }
+
+        statusEl.textContent = `Preenchido: ${preenchidos.join(', ') || 'nenhum campo'}.`
+          + (naoAchados.length ? ` Não reconhecido, confira manualmente: ${naoAchados.join(', ')}.` : '');
+      }
+
+      function aplicarMascaraData(input) {
+        let digitos = input.value.replace(/\D/g, '').slice(0, 8);
+        let formatado = digitos;
+        if (digitos.length > 4) formatado = `${digitos.slice(0, 2)}/${digitos.slice(2, 4)}/${digitos.slice(4)}`;
+        else if (digitos.length > 2) formatado = `${digitos.slice(0, 2)}/${digitos.slice(2)}`;
+        input.value = formatado;
+      }
+
+      function apiBase() { return document.getElementById('apiUrl').value.replace(/\/$/, ''); }
+      function headers() { return { 'X-Admin-Token': document.getElementById('adminToken').value }; }
+
+      async function buscarCampos() {
+        const leadId = document.getElementById('leadId').value.trim();
+        const statusEl = document.getElementById('buscaStatus');
+        if (!leadId) { statusEl.textContent = 'Informe o ID do Lead.'; return; }
+
+        statusEl.textContent = 'Buscando...';
+        try {
+          const resp = await fetch(`${apiBase()}/admin/leads/${leadId}/campos`, { headers: headers() });
+          const dados = await resp.json();
+          if (!resp.ok) { statusEl.textContent = `Erro: ${dados.detail || resp.status}`; return; }
+
+          const campos = dados.campos;
+          marcarCampo('2068452', 'labelNome', campos, 'nome', document.getElementById('nome'));
+          marcarCampo('2068460', 'labelData', campos, null, document.getElementById('data_reserva'));
+          marcarCampo('2068854', 'labelHorario', campos, null, document.getElementById('horario'));
+          marcarCampo('2068456', 'labelEstimativa', campos, null, document.getElementById('estimativa_convidados'));
+          marcarCampo('2068458', 'labelFoto', campos, null, document.getElementById('areaColarFoto'));
+
+          statusEl.textContent = dados.ja_tem_flyer_gerado
+            ? '⚠️ Esse lead já tem flyer gerado — gerar de novo vai sobrescrever.'
+            : 'Campos carregados. Preencha só o que estiver marcado em vermelho.';
+        } catch (e) {
+          statusEl.textContent = `Falha ao conectar na API: ${e}`;
+        }
+      }
+
+      function marcarCampo(fieldId, labelElId, campos, preencherCampoId, inputEl) {
+        const info = campos[fieldId];
+        const labelEl = document.getElementById(labelElId);
+        if (!info) return;
+        const classe = info.preenchido ? 'campo-ok' : 'campo-faltando';
+
+        labelEl.classList.remove('campo-ok', 'campo-faltando');
+        labelEl.classList.add(classe);
+        labelEl.textContent = labelEl.textContent.replace(/ \(.*\)$/, '') + (info.preenchido ? ' (já preenchido no Kommo)' : ' (FALTANDO)');
+
+        // O <label> não tem borda própria (ver CSS), então quem realmente
+        // mostra o verde/vermelho pro atendente é o campo em si.
+        if (inputEl) {
+          inputEl.classList.remove('campo-ok', 'campo-faltando');
+          inputEl.classList.add(classe);
+        }
+
+        // Sempre sincroniza com o que a busca trouxe do Kommo (em vez de só
+        // preencher se estiver vazio) — evita mostrar um valor antigo que o
+        // autocomplete do navegador tenha colocado no campo antes da busca
+        // terminar (ex.: valor herdado de quando esse campo era <input
+        // type="date">, num formato diferente). Não aplicável a campo de
+        // arquivo (foto) — não dá pra setar .value dele por JS.
+        if (inputEl && info.preenchido && info.valor && inputEl.type !== 'file') {
+          inputEl.value = info.valor;
+        }
+      }
+
+      async function gerarFlyer(ev) {
+        ev.preventDefault();
+        const leadId = document.getElementById('leadId').value.trim();
+        const statusEl = document.getElementById('gerarStatus');
+        if (!leadId) { statusEl.textContent = 'Informe o ID do Lead antes.'; return; }
+
+        const form = new FormData();
+        const nome = document.getElementById('nome').value.trim();
+        const data = document.getElementById('data_reserva').value;
+        const horario = document.getElementById('horario').value.trim();
+        const estimativa = document.getElementById('estimativa_convidados').value;
+        const fotoFile = document.getElementById('foto').files[0];
+
+        if (nome) form.append('nome', nome);
+        if (data) form.append('data_reserva', data);
+        if (horario) form.append('horario', horario);
+        if (estimativa) form.append('estimativa_convidados', estimativa);
+        if (fotoFile) form.append('foto', fotoFile);
+
+        statusEl.textContent = 'Gerando flyer (pode levar alguns segundos)...';
+        try {
+          const resp = await fetch(`${apiBase()}/admin/leads/${leadId}/gerar-flyer`, {
+            method: 'POST', headers: headers(), body: form,
+          });
+          const dados = await resp.json();
+          if (!resp.ok) { statusEl.textContent = `Erro: ${dados.detail || resp.status}`; return; }
+
+          document.getElementById('mensagemPronta').value = dados.mensagem_pronta;
+          document.getElementById('resultado').classList.remove('hidden');
+          statusEl.textContent = '✅ Pronto! Copie a mensagem abaixo.';
+        } catch (e) {
+          statusEl.textContent = `Falha ao conectar na API: ${e}`;
+        }
+      }
+
+      function copiarMensagem() {
+        const txt = document.getElementById('mensagemPronta');
+        txt.select();
+        navigator.clipboard.writeText(txt.value);
+      }
+    </script>
+  </body>
+</html>
