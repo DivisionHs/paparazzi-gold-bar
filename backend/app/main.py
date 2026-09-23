@@ -1,7 +1,9 @@
+from pathlib import Path
+
 from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -27,6 +29,19 @@ app = FastAPI(title="Paparazzi Gold Bar API")
 @app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
     return {"status": "ok"}
+
+
+# Serve a página estática de atendimento manual (ver CLAUDE.md 4.9) direto
+# pelo Render, pra não depender de ter o arquivo salvo localmente em cada
+# computador que for usar — a página em si é pública (só HTML/JS, sem dado
+# nenhum embutido), quem protege de verdade é o ADMIN_MANUAL_TOKEN exigido
+# pelas rotas /admin/* que ela chama.
+_CAMINHO_ATENDIMENTO_MANUAL = Path(__file__).resolve().parent.parent.parent / "frontend-lista" / "atendimento_manual.html"
+
+
+@app.get("/atendimento-manual", include_in_schema=False)
+async def pagina_atendimento_manual():
+    return FileResponse(_CAMINHO_ATENDIMENTO_MANUAL, media_type="text/html")
 
 
 app.add_middleware(

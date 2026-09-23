@@ -28,3 +28,5 @@ services:
         value: "109983139"
       - key: KOMMO_WEBHOOK_TEST_MODE
         value: "false"
+      - key: ADMIN_MANUAL_TOKEN
+        sync: false
