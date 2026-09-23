@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     KOMMO_LONG_LIVED_TOKEN: str = ""
     SUPABASE_URL: str = ""
     SUPABASE_KEY: str = ""
+    # Token estático simples (não é sessão do Supabase Auth) que protege as
+    # rotas administrativas temporárias de atendimento manual (ver
+    # backend/app/routes/admin.py e CLAUDE.md, seção 4.9). Compartilhado com
+    # a equipe que for operar a página de atendimento manual.
+    ADMIN_MANUAL_TOKEN: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",

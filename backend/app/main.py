@@ -14,6 +14,9 @@ from backend.app.routes.webhooks import router as kommo_router
 # Importa o router de validação do token do aniversariante (handshake do Flutter Web)
 from backend.app.routes.aniversariantes import router as aniversariantes_router
 
+# Importa o router administrativo temporário de atendimento manual (ver CLAUDE.md 4.9)
+from backend.app.routes.admin import router as admin_router
+
 app = FastAPI(title="Paparazzi Gold Bar API")
 
 
@@ -62,3 +65,6 @@ app.include_router(kommo_router)
 
 # Ativa a rota de validação do token do aniversariante (GET /aniversariantes/validar-token/{token})
 app.include_router(aniversariantes_router)
+
+# Ativa as rotas administrativas temporárias de atendimento manual (/admin/*)
+app.include_router(admin_router)

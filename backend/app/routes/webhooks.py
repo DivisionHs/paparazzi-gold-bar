@@ -165,6 +165,44 @@ def eh_url_http_valida(valor: str | None) -> bool:
     return bool(valor) and valor.strip().lower().startswith(("http://", "https://"))
 
 
+async def baixar_foto_via_cdn_kommo(valor_foto_custom_field: dict) -> bytes | None:
+    """
+    Monta a URL do CDN a partir do dict de metadados do Custom Field "Foto do
+    aniversariante" e baixa os bytes da imagem. Extraído de
+    processar_lead_confirmado para ser reaproveitado também pela rota
+    administrativa de atendimento manual (ver backend/app/routes/admin.py e
+    CLAUDE.md 4.9) — mesma lógica, mesmos cuidados (follow_redirects=True
+    obrigatório, validação de URL http(s) antes da requisição).
+
+    Retorna None (com log do motivo) em qualquer etapa que falhar, em vez de
+    lançar exceção — quem chama decide o que fazer com "sem foto".
+    """
+    url_foto = kommo_service.montar_url_cdn_arquivo(valor_foto_custom_field)
+    if not url_foto:
+        logger.error(
+            f"❌ Não foi possível montar a URL de download do CDN do Kommo a partir do Custom Field "
+            f"'Foto do aniversariante'. Valor bruto recebido: {valor_foto_custom_field!r}."
+        )
+        return None
+
+    if not eh_url_http_valida(url_foto):
+        logger.error(f"❌ URL montada para a foto não é http(s) válida: {url_foto!r}.")
+        return None
+
+    try:
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            resposta_imagem = await client.get(url_foto)
+    except httpx.InvalidURL as erro_url:
+        logger.error(f"❌ URL inválida ao tentar baixar a foto do aniversariante ({url_foto!r}): {erro_url}")
+        return None
+
+    if resposta_imagem.status_code != 200:
+        logger.error(f"❌ Falha ao baixar a foto do aniversariante a partir da URL do Custom Field ({url_foto}).")
+        return None
+
+    return resposta_imagem.content
+
+
 async def finalizar_cadastro_aniversariante(
     lead_id: str,
     nome_aniversariante: str,
@@ -270,6 +308,7 @@ async def finalizar_cadastro_aniversariante(
         "status": "sucesso",
         "mensagem": "Flyer gerado e cadastro concluído.",
         "link_gerado": link_formulario,
+        "url_flyer": url_publica_flyer,
     }
 
 
@@ -367,44 +406,10 @@ async def processar_lead_confirmado(lead_id: str) -> None:
         # Kommo concatenando file_uuid + version_uuid + file_name na base
         # fixa do drive da conta, sem nenhuma chamada de rede extra (ver
         # kommo_service.montar_url_cdn_arquivo).
-        url_foto = kommo_service.montar_url_cdn_arquivo(valor_foto)
-
-        if not url_foto:
-            logger.error(
-                f"❌ Não foi possível montar a URL de download do CDN do Kommo a partir do Custom Field "
-                f"'Foto do aniversariante' ({CAMPO_FOTO_ID}) do Lead {lead_id}. Valor bruto recebido: {valor_foto!r}."
-            )
+        foto_bytes = await baixar_foto_via_cdn_kommo(valor_foto)
+        if foto_bytes is None:
+            logger.error(f"❌ Não foi possível obter a foto do aniversariante do Lead {lead_id}. Abortando com segurança.")
             return
-
-        # Validação defensiva final: garante que a URL extraída acima é
-        # http(s) antes de qualquer requisição — evita que o httpx estoure
-        # "Request URL is missing an 'http://' or 'https://' protocol." (erro
-        # 500 genérico, sem contexto do que realmente veio do Kommo).
-        if not eh_url_http_valida(url_foto):
-            logger.error(
-                f"❌ O Custom Field 'Foto do aniversariante' ({CAMPO_FOTO_ID}) do Lead {lead_id} não contém uma "
-                f"URL http(s) válida. Valor bruto recebido do Kommo: {url_foto!r}."
-            )
-            return
-
-        try:
-            # follow_redirects=True é obrigatório aqui: a CDN de arquivos do
-            # Kommo (drive-g.kommo.com) responde com 301/302 antes de
-            # entregar o binário da imagem — sem isso, resposta_imagem.content
-            # viria vazio/HTML de redirecionamento em vez da foto real.
-            async with httpx.AsyncClient(follow_redirects=True) as client:
-                resposta_imagem = await client.get(url_foto)
-        except httpx.InvalidURL as erro_url:
-            # Rede de segurança: cobre qualquer outro formato inválido que
-            # passe pela checagem acima (ex.: espaços, caracteres inválidos)
-            # sem derrubar o processamento em background.
-            logger.error(f"❌ URL inválida ao tentar baixar a foto do aniversariante ({url_foto!r}): {erro_url}")
-            return
-
-        if resposta_imagem.status_code != 200:
-            logger.error(f"❌ Falha ao baixar a foto do aniversariante a partir da URL do Custom Field ({url_foto}).")
-            return
-        foto_bytes = resposta_imagem.content
 
         resultado = await finalizar_cadastro_aniversariante(
             str(lead_id), nome_aniversariante, foto_bytes, data_reserva, horario_reserva, estimativa_convidados_raw
