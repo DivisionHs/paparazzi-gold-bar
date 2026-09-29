@@ -19,7 +19,7 @@ Auth aqui serve só de gate de acesso às rotas do FastAPI.
 
 import os
 
-from fastapi import HTTPException, Request, status
+from fastapi import Depends, HTTPException, Request, status
 from supabase import create_client, Client
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -68,4 +68,29 @@ async def obter_funcionario_autenticado(request: Request) -> dict:
             detail="Sessão inválida ou expirada. Faça login novamente.",
         )
 
-    return {"id": usuario.id, "email": usuario.email}
+    metadata = getattr(usuario, "user_metadata", None) or {}
+    # Papel do funcionário (decisão de 29/09/2026, ver CLAUDE.md 4.10):
+    # gravado em user_metadata.role na criação/atualização da conta (script
+    # administrativo pontual, mesmo padrão da 1ª conta criada em 18/08/2026 —
+    # ver 4.7). Sem role gravado, cai no papel mais restrito ("porteiro") por
+    # segurança, em vez de assumir acesso de admin por omissão.
+    papel = metadata.get("role") or "porteiro"
+
+    return {"id": usuario.id, "email": usuario.email, "role": papel}
+
+
+async def exigir_admin(funcionario: dict = Depends(obter_funcionario_autenticado)) -> dict:
+    """
+    Dependency staff-only mais restrita: além de exigir sessão válida (via
+    `obter_funcionario_autenticado`), exige que o papel gravado no
+    user_metadata da conta seja "admin". Usada nas rotas que só o login
+    administrativo deve enxergar (ex.: dashboard de estatísticas gerais —
+    ver CLAUDE.md 4.10). Levanta 403 (não 401 — a sessão em si é válida, só
+    não tem permissão) em pt-BR se o papel não for admin.
+    """
+    if funcionario.get("role") != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Este login não tem permissão para acessar esta área.",
+        )
+    return funcionario

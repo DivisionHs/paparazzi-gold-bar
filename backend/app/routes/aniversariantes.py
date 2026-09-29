@@ -5,7 +5,7 @@ from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from supabase import create_client, Client
 
-from backend.app.services.auth_service import obter_funcionario_autenticado
+from backend.app.services.auth_service import exigir_admin, obter_funcionario_autenticado
 
 router = APIRouter(prefix="/aniversariantes", tags=["Aniversariantes"])
 
@@ -110,3 +110,51 @@ async def listar_aniversariantes_hoje(
     lista.sort(key=lambda a: a["horario_reserva"] or "99:99")
 
     return {"data": data_alvo, "total": len(lista), "aniversariantes": lista}
+
+
+# Dashboard geral do login admin (decisão de 29/09/2026, ver CLAUDE.md 4.10).
+# Três números CUMULATIVOS (desde sempre, não só do dia — diferente de
+# /hoje): quantos agendamentos já foram processados pelo fluxo automático
+# (linhas em `aniversariantes`), quantos convidados aproximados isso
+# representa (soma de `estimativa_convidados`, valor vindo do Kommo) e
+# quantos convidados já confirmaram presença de fato (linhas em
+# `convidados`). Só o login admin acessa (ver `exigir_admin`) — o login da
+# Portaria não deve ver números gerais do negócio, só a operação do dia.
+# Ponto único pra incrementar com mais métricas/filtro de período depois
+# (pedido explícito do usuário: "futuramente iremos incrementar").
+@router.get("/estatisticas", dependencies=[Depends(exigir_admin)])
+async def obter_estatisticas_gerais():
+    try:
+        resposta_agendamentos = supabase.table("aniversariantes")\
+            .select("estimativa_convidados", count="exact")\
+            .execute()
+    except Exception as e:
+        print(f"Erro ao consultar estatísticas de agendamentos: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao carregar as estatísticas gerais."
+        )
+
+    total_agendamentos = resposta_agendamentos.count or 0
+    total_convidados_estimados = sum(
+        (linha.get("estimativa_convidados") or 0) for linha in (resposta_agendamentos.data or [])
+    )
+
+    try:
+        resposta_convidados = supabase.table("convidados")\
+            .select("id", count="exact")\
+            .execute()
+    except Exception as e:
+        print(f"Erro ao consultar estatísticas de convidados: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao carregar as estatísticas gerais."
+        )
+
+    total_convidados_confirmados = resposta_convidados.count or 0
+
+    return {
+        "total_agendamentos": total_agendamentos,
+        "total_convidados_estimados": total_convidados_estimados,
+        "total_convidados_confirmados": total_convidados_confirmados,
+    }

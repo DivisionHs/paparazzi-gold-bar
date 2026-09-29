@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dashboard_screen.dart';
 import 'em_desenvolvimento_screen.dart';
 import 'painel_dia_screen.dart';
 
 // Hub administrativo pós-login: ponto de entrada único de tudo que é
-// operacional (Portaria, painel de aniversariantes do dia, ...). Navegação
-// simples via Navigator 1.0 (MaterialPageRoute) — sem rotas nomeadas, mesmo
-// padrão já usado no resto do app.
+// operacional (Portaria, painel de aniversariantes do dia, dashboard...).
+// Navegação simples via Navigator 1.0 (MaterialPageRoute) — sem rotas
+// nomeadas, mesmo padrão já usado no resto do app.
+//
+// Papéis (decisão de 29/09/2026, ver CLAUDE.md 4.10): a conta da Portaria
+// só enxerga Portaria + Aniversariantes do Dia; o card de Dashboard só
+// aparece pro login admin. O papel vem de user_metadata.role da sessão do
+// Supabase Auth (gravado na criação/atualização da conta) — sem esse campo,
+// trata como "porteiro" (mais restrito) por segurança. Isso é só a
+// restrição de UI: o backend também recusa a rota do dashboard pra quem não
+// for admin (ver `exigir_admin`), então navegar direto pra lá sem ser admin
+// não vaza dado nenhum, só mostra uma tela de erro.
 class HubScreen extends StatelessWidget {
   const HubScreen({super.key});
 
@@ -22,7 +32,10 @@ class HubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final email = Supabase.instance.client.auth.currentUser?.email ?? '';
+    final usuario = Supabase.instance.client.auth.currentUser;
+    final email = usuario?.email ?? '';
+    final papel = usuario?.userMetadata?['role']?.toString() ?? 'porteiro';
+    final eAdmin = papel == 'admin';
 
     return Scaffold(
       backgroundColor: colorNight,
@@ -49,6 +62,18 @@ class HubScreen extends StatelessWidget {
             children: [
               Text(email, style: const TextStyle(color: Colors.white54, fontSize: 13)),
               const SizedBox(height: 24),
+              if (eAdmin) ...[
+                _CardHub(
+                  icone: Icons.dashboard_outlined,
+                  titulo: 'Dashboard',
+                  subtitulo: 'Agendamentos, convidados aproximados e confirmados',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const DashboardScreen()),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
               _CardHub(
                 icone: Icons.qr_code_scanner,
                 titulo: 'Portaria Expressa',

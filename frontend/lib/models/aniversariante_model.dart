@@ -106,3 +106,26 @@ class ConvidadoResumo {
     );
   }
 }
+
+// Números gerais do dashboard do login admin (GET /aniversariantes/estatisticas,
+// rota admin-only -- ver CLAUDE.md 4.10). Cumulativos desde sempre, não só
+// do dia (diferente de AniversarianteHoje/PainelDiaScreen).
+class EstatisticasGerais {
+  final int totalAgendamentos;
+  final int totalConvidadosEstimados;
+  final int totalConvidadosConfirmados;
+
+  EstatisticasGerais({
+    required this.totalAgendamentos,
+    required this.totalConvidadosEstimados,
+    required this.totalConvidadosConfirmados,
+  });
+
+  factory EstatisticasGerais.fromJson(Map<String, dynamic> json) {
+    return EstatisticasGerais(
+      totalAgendamentos: json['total_agendamentos'] as int? ?? 0,
+      totalConvidadosEstimados: json['total_convidados_estimados'] as int? ?? 0,
+      totalConvidadosConfirmados: json['total_convidados_confirmados'] as int? ?? 0,
+    );
+  }
+}

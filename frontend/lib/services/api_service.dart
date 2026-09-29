@@ -34,6 +34,14 @@ class NaoAutorizadoException extends ApiException {
       : super('Sua sessão expirou. Faça login novamente.');
 }
 
+// Lançada quando uma rota admin-only (ex.: dashboard de estatísticas)
+// responde 403 -- a sessão é válida, mas o login não tem papel de admin
+// (ver auth_service.exigir_admin no backend e CLAUDE.md 4.10).
+class AcessoNegadoException extends ApiException {
+  AcessoNegadoException()
+      : super('Este login não tem permissão para acessar esta área.');
+}
+
 // Formata uma data local como "AAAA-MM-DD", sem depender de fuso/hora --
 // usada só pra montar o query param `data` das rotas que filtram por dia.
 String _formatarDataIso(DateTime data) {
@@ -262,5 +270,32 @@ class ApiService {
         utilizado ? 'Não foi possível confirmar a entrada.' : 'Não foi possível desfazer a confirmação.',
       );
     }
+  }
+
+  // Dashboard geral (admin-only): agendamentos, convidados aproximados e
+  // convidados confirmados, cumulativos desde sempre -- ver CLAUDE.md 4.10.
+  Future<EstatisticasGerais> buscarEstatisticasGerais() async {
+    final Uri url = Uri.parse('$baseUrl/aniversariantes/estatisticas');
+
+    http.Response response;
+    try {
+      response = await http.get(url, headers: _headersAutenticados);
+    } catch (_) {
+      throw ApiException('Não foi possível conectar ao servidor.');
+    }
+
+    if (response.statusCode == 401) {
+      throw NaoAutorizadoException();
+    }
+
+    if (response.statusCode == 403) {
+      throw AcessoNegadoException();
+    }
+
+    if (response.statusCode != 200) {
+      throw ApiException('Não foi possível carregar as estatísticas gerais.');
+    }
+
+    return EstatisticasGerais.fromJson(jsonDecode(response.body));
   }
 }
