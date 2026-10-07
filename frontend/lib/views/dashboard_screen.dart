@@ -4,14 +4,45 @@ import '../services/api_service.dart';
 
 enum _EstadoTela { carregando, erro, carregado }
 
+// Período rápido do filtro (decisão de 07/10/2026, ver CLAUDE.md 4.11):
+// só os 4 presets abaixo -- nada de período customizado/calendário ainda,
+// isso faz parte do "Dashboard completo" maior, que fica pra próxima fase
+// (condicionado a contrato mensal). `intervalo` devolve null/null pra
+// "tudo" (mantém o comportamento cumulativo de sempre).
+enum _Periodo { hoje, semana, mes, tudo }
+
+extension on _Periodo {
+  String get rotulo => switch (this) {
+        _Periodo.hoje => 'Hoje',
+        _Periodo.semana => 'Últimos 7 dias',
+        _Periodo.mes => 'Este mês',
+        _Periodo.tudo => 'Tudo',
+      };
+
+  (DateTime?, DateTime?) get intervalo {
+    final hoje = DateTime.now();
+    switch (this) {
+      case _Periodo.hoje:
+        return (hoje, hoje);
+      case _Periodo.semana:
+        return (hoje.subtract(const Duration(days: 6)), hoje);
+      case _Periodo.mes:
+        final inicioMes = DateTime(hoje.year, hoje.month, 1);
+        final fimMes = DateTime(hoje.year, hoje.month + 1, 0);
+        return (inicioMes, fimMes);
+      case _Periodo.tudo:
+        return (null, null);
+    }
+  }
+}
+
 // Dashboard geral do login admin (decisão de 29/09/2026, ver CLAUDE.md
-// 4.10): três números cumulativos (desde sempre, não só do dia -- ver
-// PainelDiaScreen pra isso) -- agendamentos já processados, convidados
-// aproximados (soma vinda do Kommo) e convidados confirmados de fato.
-// Só aparece no Hub pro login admin (ver HubScreen); a rota no backend
-// também é protegida (GET /aniversariantes/estatisticas, `exigir_admin`).
-// Primeira versão simples, de propósito -- ponto único pra incrementar
-// com mais métricas/gráficos/filtro de período depois.
+// 4.10): três números -- agendamentos já processados, convidados
+// aproximados (soma vinda do Kommo) e convidados confirmados de fato --
+// com filtro rápido de período (decisão de 07/10/2026, ver CLAUDE.md
+// 4.11; padrão "Tudo", cumulativo desde sempre, igual antes). Só aparece
+// no Hub pro login admin (ver HubScreen); a rota no backend também é
+// protegida (GET /aniversariantes/estatisticas, `exigir_admin`).
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -30,6 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   _EstadoTela _estado = _EstadoTela.carregando;
   EstatisticasGerais? _estatisticas;
   String? _erro;
+  _Periodo _periodo = _Periodo.tudo;
 
   static const Color colorNight = DashboardScreen.colorNight;
   static const Color colorGraphite = DashboardScreen.colorGraphite;
@@ -45,7 +77,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _carregar() async {
     setState(() => _estado = _EstadoTela.carregando);
     try {
-      final estatisticas = await _apiService.buscarEstatisticasGerais();
+      final (inicio, fim) = _periodo.intervalo;
+      final estatisticas = await _apiService.buscarEstatisticasGerais(inicio: inicio, fim: fim);
       if (!mounted) return;
       setState(() {
         _estatisticas = estatisticas;
@@ -58,6 +91,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _estado = _EstadoTela.erro;
       });
     }
+  }
+
+  void _selecionarPeriodo(_Periodo periodo) {
+    if (periodo == _periodo) return;
+    setState(() => _periodo = periodo);
+    _carregar();
+  }
+
+  // Filtro rápido de período -- linha de chips simples (sem calendário/
+  // período customizado, ver nota na declaração de _Periodo).
+  Widget _buildFiltroPeriodo() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: _Periodo.values.map((periodo) {
+        final selecionado = periodo == _periodo;
+        return ChoiceChip(
+          label: Text(periodo.rotulo),
+          selected: selecionado,
+          onSelected: (_) => _selecionarPeriodo(periodo),
+          backgroundColor: colorGraphite.withOpacity(0.8),
+          selectedColor: colorGold,
+          labelStyle: TextStyle(
+            color: selecionado ? colorNight : Colors.white70,
+            fontSize: 12,
+            fontWeight: selecionado ? FontWeight.bold : FontWeight.normal,
+          ),
+          side: BorderSide(color: colorGold.withOpacity(selecionado ? 1 : 0.25)),
+          showCheckmark: false,
+        );
+      }).toList(),
+    );
   }
 
   @override
@@ -115,16 +180,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 style: TextStyle(color: colorSoftGold, fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'Números acumulados desde o início do fluxo automático.',
-                style: TextStyle(color: Colors.white38, fontSize: 12),
+              Text(
+                _periodo == _Periodo.tudo
+                    ? 'Números acumulados desde o início do fluxo automático.'
+                    : 'Números do período selecionado: ${_periodo.rotulo.toLowerCase()}.',
+                style: const TextStyle(color: Colors.white38, fontSize: 12),
               ),
+              const SizedBox(height: 16),
+              _buildFiltroPeriodo(),
               const SizedBox(height: 20),
               _StatTile(
                 icone: Icons.event_available_outlined,
                 valor: '${estatisticas.totalAgendamentos}',
                 titulo: 'Agendamentos realizados',
-                subtitulo: 'Aniversários com flyer já processado',
+                subtitulo: 'Comemorações com flyer já processado',
               ),
               const SizedBox(height: 14),
               _StatTile(
@@ -147,7 +216,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      'Mais indicadores e filtros por período chegam nas próximas versões.',
+                      'Mais detalhamento por reserva e exportação chegam numa próxima fase.',
                       style: TextStyle(color: Colors.white24, fontSize: 11),
                     ),
                   ),

@@ -27,3 +27,8 @@ docs/
 # agora, então ignora só .json na raiz (não afeta frontend/web/manifest.json
 # nem nenhum outro .json versionado dentro de subpastas).
 /*.json
+
+# Demo de referência enviada pelo Ric (código fictício, sem backend, só
+# visual/comportamental — ver CLAUDE.md 4.11). Não é código do projeto,
+# fica só local pra consulta.
+/paparazzi-dashboard/

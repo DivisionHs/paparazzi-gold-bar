@@ -113,21 +113,34 @@ async def listar_aniversariantes_hoje(
 
 
 # Dashboard geral do login admin (decisão de 29/09/2026, ver CLAUDE.md 4.10).
-# Três números CUMULATIVOS (desde sempre, não só do dia — diferente de
+# Três números cumulativos (desde sempre, não só do dia — diferente de
 # /hoje): quantos agendamentos já foram processados pelo fluxo automático
 # (linhas em `aniversariantes`), quantos convidados aproximados isso
 # representa (soma de `estimativa_convidados`, valor vindo do Kommo) e
 # quantos convidados já confirmaram presença de fato (linhas em
 # `convidados`). Só o login admin acessa (ver `exigir_admin`) — o login da
 # Portaria não deve ver números gerais do negócio, só a operação do dia.
-# Ponto único pra incrementar com mais métricas/filtro de período depois
-# (pedido explícito do usuário: "futuramente iremos incrementar").
+#
+# Filtro de período opcional (decisão de 07/10/2026, ver CLAUDE.md 4.11):
+# `data_inicio`/`data_fim` (AAAA-MM-DD, ambos opcionais, inclusive nas duas
+# pontas) filtram por `aniversariantes.data_reserva` — mesma coluna já usada
+# em `/hoje`. Sem nenhum dos dois, cai no comportamento de sempre (tudo,
+# desde o início). Esse filtro é o único incremento autorizado por enquanto
+# no Dashboard — o resto do pedido de filtros/detalhamento (ver o "Dashboard
+# completo" do próximo ciclo) fica condicionado ao contrato mensal.
 @router.get("/estatisticas", dependencies=[Depends(exigir_admin)])
-async def obter_estatisticas_gerais():
+async def obter_estatisticas_gerais(
+    data_inicio: date | None = Query(None, description="Filtra data_reserva >= esta data (AAAA-MM-DD)."),
+    data_fim: date | None = Query(None, description="Filtra data_reserva <= esta data (AAAA-MM-DD)."),
+):
     try:
-        resposta_agendamentos = supabase.table("aniversariantes")\
-            .select("estimativa_convidados", count="exact")\
-            .execute()
+        consulta_agendamentos = supabase.table("aniversariantes")\
+            .select("kommo_lead_id, estimativa_convidados", count="exact")
+        if data_inicio:
+            consulta_agendamentos = consulta_agendamentos.gte("data_reserva", data_inicio.isoformat())
+        if data_fim:
+            consulta_agendamentos = consulta_agendamentos.lte("data_reserva", data_fim.isoformat())
+        resposta_agendamentos = consulta_agendamentos.execute()
     except Exception as e:
         print(f"Erro ao consultar estatísticas de agendamentos: {e}")
         raise HTTPException(
@@ -135,23 +148,45 @@ async def obter_estatisticas_gerais():
             detail="Erro ao carregar as estatísticas gerais."
         )
 
+    linhas_agendamentos = resposta_agendamentos.data or []
     total_agendamentos = resposta_agendamentos.count or 0
     total_convidados_estimados = sum(
-        (linha.get("estimativa_convidados") or 0) for linha in (resposta_agendamentos.data or [])
+        (linha.get("estimativa_convidados") or 0) for linha in linhas_agendamentos
     )
 
-    try:
-        resposta_convidados = supabase.table("convidados")\
-            .select("id", count="exact")\
-            .execute()
-    except Exception as e:
-        print(f"Erro ao consultar estatísticas de convidados: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Erro ao carregar as estatísticas gerais."
-        )
-
-    total_convidados_confirmados = resposta_convidados.count or 0
+    # Sem filtro de período: mantém a contagem simples e global de sempre.
+    # Com filtro: convidados confirmados só contam se pertencerem a um dos
+    # agendamentos já filtrados por data (mesmo padrão de junção por
+    # lead_id já usado em /hoje) — senão um convidado de uma reserva de
+    # fora do período escolhido inflaria o número.
+    if data_inicio or data_fim:
+        lead_ids_filtrados = [l["kommo_lead_id"] for l in linhas_agendamentos]
+        total_convidados_confirmados = 0
+        if lead_ids_filtrados:
+            try:
+                resposta_convidados = supabase.table("convidados")\
+                    .select("id", count="exact")\
+                    .in_("lead_id", lead_ids_filtrados)\
+                    .execute()
+                total_convidados_confirmados = resposta_convidados.count or 0
+            except Exception as e:
+                print(f"Erro ao consultar estatísticas de convidados (com filtro de período): {e}")
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Erro ao carregar as estatísticas gerais."
+                )
+    else:
+        try:
+            resposta_convidados = supabase.table("convidados")\
+                .select("id", count="exact")\
+                .execute()
+            total_convidados_confirmados = resposta_convidados.count or 0
+        except Exception as e:
+            print(f"Erro ao consultar estatísticas de convidados: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Erro ao carregar as estatísticas gerais."
+            )
 
     return {
         "total_agendamentos": total_agendamentos,

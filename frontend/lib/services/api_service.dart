@@ -273,9 +273,16 @@ class ApiService {
   }
 
   // Dashboard geral (admin-only): agendamentos, convidados aproximados e
-  // convidados confirmados, cumulativos desde sempre -- ver CLAUDE.md 4.10.
-  Future<EstatisticasGerais> buscarEstatisticasGerais() async {
-    final Uri url = Uri.parse('$baseUrl/aniversariantes/estatisticas');
+  // convidados confirmados -- ver CLAUDE.md 4.10. `inicio`/`fim` opcionais
+  // (decisão de 07/10/2026, ver CLAUDE.md 4.11) filtram por período; sem os
+  // dois, cai no total cumulativo de sempre.
+  Future<EstatisticasGerais> buscarEstatisticasGerais({DateTime? inicio, DateTime? fim}) async {
+    final Map<String, String> query = {
+      if (inicio != null) 'data_inicio': _formatarDataIso(inicio),
+      if (fim != null) 'data_fim': _formatarDataIso(fim),
+    };
+    final Uri url = Uri.parse('$baseUrl/aniversariantes/estatisticas')
+        .replace(queryParameters: query.isEmpty ? null : query);
 
     http.Response response;
     try {

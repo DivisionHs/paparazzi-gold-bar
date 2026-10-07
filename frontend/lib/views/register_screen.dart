@@ -307,7 +307,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               fontWeight: FontWeight.bold,
             ),
             children: [
-              const TextSpan(text: 'Aniversário do '),
+              const TextSpan(text: 'Vamos comemorar com '),
               TextSpan(
                 text: nomeAniversariante,
                 style: const TextStyle(
@@ -315,6 +315,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const TextSpan(text: '!'),
             ],
           ),
         ),
